@@ -1,0 +1,8 @@
+.alert{
+    &.alert-success{
+        color: $white;    
+    }
+    &.alert-danger{
+        color:$white;
+    }
+}
