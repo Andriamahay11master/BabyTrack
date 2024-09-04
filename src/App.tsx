@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.scss'
 import './assets/scss/main.scss'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Dashboard from './page/dashboard/Dashboard'
+import AddArticle from './page/addArticle/AddArticle'
+import ListArticle from './page/listArticle/ListArticle'
+import Statistics from './page/statistics/Statistics'
+import Login from './page/login/Login'
+import SignUp from './page/signup/SignUp'
+import SignIn from './page/signIn/SignIn'
+import ForgotPassword from './page/forgotPassword/ForgotPassword'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React <i className='icon-lock'></i></h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/addArticle" element={<AddArticle />}></Route>
+        <Route path="/listArticle" element={<ListArticle />}></Route>
+        <Route path="/statistics" element={<Statistics />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/signin" element={<SignIn />}></Route>
+        <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
+        <Route path="/" element={<App />}></Route>
+      </Routes>
+    </Router>
   )
 }
 
