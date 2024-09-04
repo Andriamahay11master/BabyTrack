@@ -9,6 +9,7 @@ import Login from './page/login/Login'
 import SignUp from './page/signup/SignUp'
 import SignIn from './page/signIn/SignIn'
 import ForgotPassword from './page/forgotPassword/ForgotPassword'
+import Splashscreen from './page/splashscreen/Splashscreen'
 
 function App() {
 
@@ -23,7 +24,7 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
-        <Route path="/" element={<App />}></Route>
+        <Route path="/" element={<Splashscreen />}></Route>
       </Routes>
     </Router>
   )
