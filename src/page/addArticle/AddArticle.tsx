@@ -1,7 +1,10 @@
+import Header from '../../components/header/Header'
+import { headerNav } from '../../data/header'
 import './addArticle.scss'
 export default function AddArticle() {
     return (
-        <div>
+        <div className='main-page'>
+            <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>
             <h1>Page Add Article</h1>
         </div>
     )
