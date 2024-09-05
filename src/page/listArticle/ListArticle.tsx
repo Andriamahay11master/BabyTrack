@@ -5,7 +5,9 @@ export default function ListArticle() {
     return (
         <div className='main-page'>
             <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>
-            <h1>Page List Article</h1>
+            <div className="container">
+                <h1>Page List Article</h1>
+            </div>
         </div>
     )
 }

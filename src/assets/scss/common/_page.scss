@@ -1,12 +1,9 @@
-.block-page{
-    
-}
 .main-page{
     padding-top: 75px;
     background: $default-bg;
-    min-height: calc(100vh - 54px);
+    min-height: 100vh;
     @include max(768px){
-        min-height: calc(100vh - 72px);
+        padding-top: 85px;
     }
     .main-page-top{
         display: flex;
