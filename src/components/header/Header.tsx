@@ -104,7 +104,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                             {userMail && 
                             <div className='profil-block'>
                                 <div className="profil-image">
-                                    <img src="/images/user.png" alt="Avatar" width={25} height={25} title='Avatar image'/>
+                                    <img src="/user.png" alt="Avatar" width={25} height={25} title='Avatar image'/>
                                 </div>
                                 <p>{userMail}</p>
                             </div>}
