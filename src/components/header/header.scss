@@ -1,0 +1,335 @@
+@import "../../assets/scss/common/variable";
+@import "../../assets/scss/common/mixins";
+
+.sectHeader {    
+    width: 100%;
+    z-index: 101;
+    background: #fff;
+    box-shadow: 0 3px 10px -7px rgba(0, 0, 0, 0.6);
+    &--fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    &:before{
+        content: "";
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        top: 72px;
+        left: 0;
+        position: fixed;
+        background: rgba(#000, 0.6);
+        z-index: 90;
+    }
+    &.show-menu{
+        &::before{
+            display: block;
+        }
+    }
+    .header-reseau-sociaux{
+        display: flex;
+        grid-gap: 12px;
+        @include max(1200px){
+            padding: 24px 50px;
+        }
+    }
+    .header-rs-link{
+        color:$grey;
+        text-decoration: none;
+        i{
+            font-size: 20px;
+        }
+        &:hover{
+            color: #000;
+        }
+    }
+    
+    .dropdown-language{
+        padding-right: 20px;
+        position: relative;
+        @include max(1200px){
+            display: none;
+        }
+        button{
+            text-decoration: none;
+            color: $grey-4A;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .dropdown-default{
+            position: relative;
+            width: 20px;
+            &::after{
+                content: '';
+                position: absolute;
+                top:5px;
+                margin-left: 5px;
+                width: 0; 
+                height: 0; 
+                border-left: 4px solid transparent;
+                border-right: 4px solid transparent;
+                border-top: 4px solid #000;
+            }
+        }
+        .dropdown-language-list{
+            display: none;
+            &.show-dropdown{
+                display: block;
+                position: absolute;
+                border-radius: 2px;
+                padding: 5px;
+                background: $white-f7;
+                margin-top: 2px;
+            }
+            li{
+                &:first-child{
+                    margin-bottom: 2px;
+                }
+                .dropdown-link{
+                    transition: all 0.6s ease;
+                    &:hover{
+                        color: $color-primary;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.headerIntern {
+    
+    border-bottom: 1px solid rgba($color-primary, 0.6);
+    position: relative;
+    z-index: 2;
+    @include max(1200px){
+        border-bottom: none;
+        padding: 13px 0;
+        z-index: initial;
+    }
+    @include max(768px){
+        padding: 10px 0;
+    }
+    .headerInternContent{
+        display: flex;
+        align-items: center;
+        
+        &.show-menu{
+            transform: translate(0);
+            transition: transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+            width: 60%;
+        }
+        @include max(1200px){
+            position: fixed;
+            top: 0px;
+            right: 0;
+            height: 100vh;
+            width: 0;
+            z-index: 100;
+            background-color: #FFF;
+            flex-direction: column;
+            justify-content: initial;
+            align-items: flex-start;
+            padding: 121px 49px 0;
+            overflow: hidden;
+            transform: translateX(+100vw);
+            transition: transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+        }
+        @include max(768px){
+            top: 61px;
+            padding: 30px;
+            height: calc(100vh - 61px);
+        }
+    }
+    .cntLogoMobile{
+        display: none;
+        @include max(1200px){
+            display: inline-block;
+        }
+        a{
+            display: flex;
+            align-items: center;
+            figure{
+                width: 50px;
+                height: 50px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: start;
+            }
+            img{
+                @include max(768px){
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 100%;
+                }
+            }
+            .cntLogo-text{
+                margin-left: 10px;
+                font-weight: 600;
+                font-size: 14px;
+            }
+        }
+    }
+    .cntlogo {
+        @include max(1200px){
+            display: none;
+        }
+        a {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            figure{
+                width: 50px;
+                height: 50px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: start;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+            }
+            .cntLogo-text{
+                margin-left: 10px;
+                font-weight: 600;
+            }
+        }
+    }   
+    .cntNav{
+        display: flex;
+        align-items: center;
+        @include max(1200px){
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        li{
+            @include max(1200px){
+                width: 100%;
+                padding-right: 0;
+                border-bottom: 1px solid rgba($grey-6A, 0.20);
+            }
+        }
+        .cntNav-link{
+            text-decoration: none;
+            color:$black;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 22px;
+            position: relative;
+            height: 100%;
+            display: inline-block;
+            transition: all 0.6s cubic-bezier(0.215, 0.610, 0.355, 1);
+            padding: 20px;
+            &:hover{
+                background: $color-primary;
+                color: #FFF;
+            }
+            &.active{
+                background: $color-primary;
+                color: #FFF;
+            }
+        }
+    }
+    .btnBox{
+        display: none;
+        @include max(1200px){
+            display: block;
+            position: absolute;
+            top: 25px;
+            right: 50px;
+            z-index: 101;
+        }
+        @include max(768px){
+            right: 15px;
+        }
+    }
+    .nav-right{
+        @include max(1200px){
+            position: absolute;
+            top: 25px;
+            right: 94px;
+        }
+        @include max(768px){
+            position: static;
+            padding-top: 24px;
+        }
+    }
+    .usermail-mobile{
+        display: none;
+        @include max(1200px){
+            display: block;
+            margin-bottom: 20px;
+        }
+    }
+    .block-bottom-mobile{
+        display: none;
+        @include max(1200px){
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid rgba(#000, 0.2);
+        }
+        .list-language{
+            @include max(1200px){
+                padding: 24px 50px;
+            }
+            .list-language-link{
+                text-transform: uppercase;
+                margin-right: 11px;
+                font-size: 12px;
+                color: $grey-4A;
+                font-weight: 300;
+                text-decoration: none;
+                &.active{
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+    .container-transverse{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .headerIntern-left{
+        line-height: 1;
+    }
+    .headerIntern-right{
+        display: flex;
+        align-items: center;
+    }
+    .profil{
+        display: flex;
+        align-items: center;
+        @include max(1200px){
+            display: none;
+        }
+        .profil-block{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            .profil-image{
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 25px;
+                height: 25px;
+                border-radius: 100%;
+                margin-right: 10px;
+            }
+            img{
+                margin-right: 10px;
+            }
+        }
+        p{
+            font-size: 13px;
+            text-decoration: underline;
+        }
+    }
+
+}
