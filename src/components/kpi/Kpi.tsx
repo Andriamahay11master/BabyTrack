@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { IconType } from 'react-icons';
-import * as Icons from 'react-icons/fa';
+import * as Icons from 'react-icons/fi';
 import './kpi.scss';
 
 interface KpiProps{
-    icon ?: keyof typeof Icons
+    icon ?: string
     title : string,
     value : number | string
     currency ?: string

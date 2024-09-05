@@ -8,6 +8,16 @@
     background: #FFF;
     padding: 25px;
     border-radius: 4px;
+    svg{
+        color: $color-secondary;
+        height: 50px;
+        width: 50px;
+        border-radius: 10px;
+        @include max(992px){
+            height: 40px;
+            width: 40px;
+        }
+    }
     .kpi-title{
         color: $color-primary;
         font-size: 20px;
