@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './header.scss';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 // import { auth } from './firebase';
 
 interface HeaderProps {
@@ -47,20 +47,20 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                 <div className="container-transverse">
                     <div className="headerIntern-left">
                         <div className="cntLogoMobile">
-                                <a href="/" title='link to home'>
+                                <NavLink to="/dashboard" title='link to dashboard'>
                                     <figure>
                                         <img src="/BabyTrack.jpg" alt="Logo Site" width={200} height={200} title='BabyTrack logo image'/>
                                     </figure>
                                     <span className='cntLogo-text'>BabyTrack</span>
-                                </a>
+                                </NavLink>
                         </div>
                         <div className={`headerInternContent${navbarOpen ? ' show-menu' : ''}`}>
                             <div className="cntlogo">
-                                <a href="/" title='link to home'>
+                                <NavLink to="/dashboard" title='link to dashboard'>
                                     <figure>
                                         <img src="/BabyTrack.jpg" alt="Logo Site" width={200} height={200} title='BabyTrack logo image'/>
                                     </figure>
-                                </a>
+                                </NavLink>
                             </div>
                             <p className='usermail-mobile'>{userMail}</p>
                             <div className="boxNavIntern"> 
@@ -72,12 +72,12 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                                                 
                                                 return (
                                                     <li key={link.name}>
-                                                        <a
+                                                        <NavLink
                                                             className={isActive ? 'cntNav-link active' : 'cntNav-link'}
-                                                            href={link.href}
+                                                            to={link.href}
                                                             onClick={closeMenu} title='Link menu'>
                                                             {link.name}
-                                                        </a>
+                                                        </NavLink>
                                                     </li>
                                                 
                                                 )
