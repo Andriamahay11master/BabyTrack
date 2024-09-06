@@ -1,0 +1,17 @@
+@import "../../assets/scss/common/variable";
+@import "../../assets/scss/common/mixins";
+
+.main-page {
+    .listKpi {
+      .kpi-item {
+        @for $i from 1 through 4 {
+          &:nth-child(#{$i}) {
+            svg {
+              color: nth($kpi-colors, $i);
+            }
+          }
+        }
+      }
+    }
+  }
+  
