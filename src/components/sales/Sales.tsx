@@ -1,10 +1,11 @@
 import './sales.scss';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { SalesType } from '../../models/Sales';
         
 
 interface SalesProps {
-    dataList: any
+    dataList: Array<SalesType>
 }
 
 export default function Sales({dataList} : SalesProps) {
