@@ -19,16 +19,18 @@ export default function Dashboard() {
             {
                 idsales: 'NE 001',
                 description: 'T-shirt 1',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: true
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: true
             },
             {
                 idsales: 'NE 002',
                 description: 'T-shirt 2',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: true
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: true
             }
         ])
     }
@@ -39,44 +41,50 @@ export default function Dashboard() {
             {
                 idsales: 'NE 003',
                 description: 'T-shirt 3',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             },
             {
                 idsales: 'NE 004',
                 description: 'T-shirt 4',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             },
             {
                 idsales: 'NE 004',
                 description: 'T-shirt 4',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             },
             {
                 idsales: 'NE 005',
                 description: 'T-shirt 5',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             },
             {
                 idsales: 'NE 006',
                 description: 'T-shirt 6',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             },
             {
                 idsales: 'NE 007',
                 description: 'T-shirt 7',
-                Taille: 'L',
-                Prix: 2000,
-                Etat: false
+                taille: 'L',
+                prixAchat: 2000,
+                prixVente:4000,
+                etat: false
             }
         ])
     }
