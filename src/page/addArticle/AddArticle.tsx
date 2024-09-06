@@ -1,4 +1,5 @@
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
+import FormArticle from '../../components/formArticle/FormArticle'
 import Header from '../../components/header/Header'
 import { breadcrumbAddArticle } from '../../data/breadcrumb'
 import { headerNav } from '../../data/header'
@@ -12,7 +13,11 @@ export default function AddArticle() {
                     <div className="main-page-top">
                         <Breadcrumb items={breadcrumbAddArticle}/>
                     </div>
-                    <h1>Page Add Article</h1>
+                    <div className="main-section page-form">
+                        <div className="section-form">
+                            <FormArticle stateForm={true}/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

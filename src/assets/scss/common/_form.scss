@@ -27,6 +27,7 @@
             color: #000;
         }
         input, select{
+            border: none;
             border-radius: 3px;
             height: 40px;
             padding: 0 10px;
@@ -59,8 +60,8 @@ select{
     color: #000;
     -webkit-appearance: none;
     background-image:
-    linear-gradient(45deg, transparent 50%, $color-secondary 50%),
-    linear-gradient(135deg, $color-secondary 50%, transparent 50%),
+    linear-gradient(45deg, transparent 50%, $black 50%),
+    linear-gradient(135deg, $black 50%, transparent 50%),
     linear-gradient(to right, $color-primary, $color-primary)!important;
     background-position:
         calc(100% - 20px) calc(1em + 2px),
