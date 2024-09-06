@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { IconType } from 'react-icons';
-import * as Icons from 'react-icons/fi';
+import * as Icons from 'react-icons/fa';
 import './kpi.scss';
 
 interface KpiProps{
