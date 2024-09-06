@@ -10,8 +10,19 @@ import SignUp from './page/signup/SignUp'
 import SignIn from './page/signIn/SignIn'
 import ForgotPassword from './page/forgotPassword/ForgotPassword'
 import Splashscreen from './page/splashscreen/Splashscreen'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 3000); // Simulate a 3-second load time
+    return () => clearTimeout(timer);
+  }, [])
+
+  if (loading) {
+    return <Splashscreen />
+  }
 
   return (
     <Router>
@@ -24,7 +35,7 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
-        <Route path="/" element={<Splashscreen />}></Route>
+        <Route path="/" element={<Dashboard />}></Route>
       </Routes>
     </Router>
   )
