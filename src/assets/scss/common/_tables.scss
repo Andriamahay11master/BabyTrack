@@ -84,16 +84,51 @@
             font-size: 15px;
             svg{
                 path{
-                    fill: $color-secondary;
+                    fill: $grey;
                 }
             }
         }
         .p-paginator-pages{
             button{
-                color: $color-secondary;
+                color: $grey;
                 &.p-highlight{
                     font-weight: 800;
                     color: $color-primary;
+                }
+            }
+        }
+        .p-dropdown{
+            padding: 2px;
+            border: 1px solid $color-primary;
+            border-radius: 3px;
+            span{
+                font-size: 12px;
+                margin-right: 5px;
+            }
+            .p-dropdown-trigger{
+                svg{
+                    width: 9px;
+                    height: 9px;
+                    stroke: $grey;
+                }
+            }
+        }
+    }
+}
+
+.p-dropdown-panel{
+    background: $white-f7;
+    span{
+        font-size: 12px;
+        color: $grey;
+    }
+    ul{
+        li{
+            padding: 0 2px;
+            &.p-focus{
+                background: $color-primary;
+                span{
+                    color: $white;
                 }
             }
         }
