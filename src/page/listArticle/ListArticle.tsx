@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 import Header from '../../components/header/Header'
 import { breadcrumbListArticle } from '../../data/breadcrumb'
@@ -7,7 +7,14 @@ import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
+    const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
+    const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
 
+    const handleFilterStateArticle = () => {
+        const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
+        setInputFilterStateArticle(selectedStateArticle);
+        //list Sales
+    }
     //Get Sales sold in database
     const getSalesSold = () => {
         setSales([
@@ -114,6 +121,13 @@ export default function ListArticle() {
                         <Breadcrumb items={breadcrumbListArticle}/>
                     </div>
                     <div className="section-list">
+                        <div className="table-filter">
+                            <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
+                              <option value="Vendu">Vendu</option>
+                              <option value="Non Vendu">Non Vendu</option>
+                              <option value="ALL">Tous</option>
+                            </select> 
+                        </div>
                         <div className="list-block list-view">
                             <table className='list-table'>
                                     <thead>
