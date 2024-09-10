@@ -14,23 +14,36 @@ export default function FormArticle({stateForm} : FormArticleProps) {
     const [size, setSize] = useState('');
     const [prixA, setPrixA] = useState(0);
     const [prixV, setPrixV] = useState(0);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState<Timestamp | null>(null);
     const [success, setSuccess] = useState(false);
 
     const addArticle = async () => {
-        await addDoc(collection(db, 'articles'), {
-            reference: reference,
-            description: description,
-            taille: size,
-            prixA: prixA,
-            prixV: prixV,
-            benefice: prixV - prixA,
-            date: Timestamp.fromDate(new Date(date.toString())),
-            stock: false,
-            etat: false
-        })
+        if(date){
+            await addDoc(collection(db, 'articles'), {
+                reference: reference,
+                description: description,
+                taille: size,
+                prixA: prixA,
+                prixV: prixV,
+                benefice: prixV - prixA,
+                date: Timestamp.fromDate(new Date(date.toString())),
+                stock: false,
+                etat: false
+            })
+            setSuccess(true);
+            resetForm();
+        }
+        
     }
 
+    const resetForm = () => {
+        setReference('');
+        setDescription('');
+        setSize('1 mois');
+        setPrixA(0);
+        setPrixV(0);
+        setDate(null);
+    }
     const setArticle = () => {
         console.log('Set Article');
     }
