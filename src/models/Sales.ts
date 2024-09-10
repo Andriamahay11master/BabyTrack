@@ -5,5 +5,5 @@ export type SalesType = {
     prixAchat: number,
     prixVente: number,
     benefice?: number,
-    etat: boolean
+    etat: boolean | string
 }

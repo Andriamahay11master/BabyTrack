@@ -114,6 +114,11 @@ export default function ListArticle() {
         console.log(id);
     }
 
+    const salesExportExcel = sales.map(sale => ({
+        ...sale,
+        etat: sale.etat ? 'Vendu' : 'Non Vendu'
+    }));
+
     return (
         <>
             <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>    
@@ -125,7 +130,7 @@ export default function ListArticle() {
                     <div className="section-list">
                         <div className="table-filter">
                             <ExportCSV data={sales} />
-                            <ExportExcel data={sales} nameFile='sales' nameSheet='Sales'/>
+                            <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
                             <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
                               <option value="Vendu">Vendu</option>
                               <option value="Non Vendu">Non Vendu</option>
