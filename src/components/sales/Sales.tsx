@@ -16,9 +16,10 @@ export default function Sales({dataList} : SalesProps) {
         rows={5} rowsPerPageOptions={[5, 10, 25, 50]} stripedRows value={dataList} sortMode="multiple">
                 <Column field="idsales" header="Réference" sortable></Column>
                 <Column field="description" header="Description" sortable></Column>
-                <Column field="Taille" header="Taille" sortable></Column>
-                <Column field="Prix" header="Prix" sortable></Column>
-                <Column field="Etat" header="Etat" sortable></Column>
+                <Column field="taille" header="Taille" sortable></Column>
+                <Column field="prixAchat" header="PrixAchat" sortable></Column>
+                <Column field="prixVente" header="PrixVente" sortable></Column>
+                <Column field="etat" header="etat" sortable></Column>
             </DataTable>
         </div>
     )
