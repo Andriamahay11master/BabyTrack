@@ -15,6 +15,7 @@ export default function FormArticle({stateForm} : FormArticleProps) {
     const [size, setSize] = useState('');
     const [prixA, setPrixA] = useState(0);
     const [prixV, setPrixV] = useState(0);
+    const [quantite, setQuantite] = useState(0);
     const [date, setDate] = useState<Timestamp | null>(null);
     const [success, setSuccess] = useState(false);
 
@@ -27,8 +28,9 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                 prixA: prixA,
                 prixV: prixV,
                 benefice: prixV - prixA,
-                date: Timestamp.fromDate(new Date(date.toString())),
-                stock: false,
+                dateA: Timestamp.fromDate(new Date(date.toString())),
+                dateV: Timestamp.fromDate(new Date(date.toString())),
+                stock: 1,
                 etat: false
             })
             setSuccess(true);
@@ -43,6 +45,7 @@ export default function FormArticle({stateForm} : FormArticleProps) {
         setSize('1 mois');
         setPrixA(0);
         setPrixV(0);
+        setQuantite(1);
         setDate(null);
     }
     const setArticle = () => {
@@ -65,6 +68,12 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                     <label htmlFor="taille">Taille</label>
                     <select name="taille" id="taille" value={size}>
                         {taille.map((item, index) => <option key={index} value={item}>{item}</option>)}
+                    </select>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="quantite">Quantité</label>
+                    <select name="quantite" id="quantite" value={quantite}>
+                        {Array.from(Array(10).keys()).map((item, index) => <option key={index} value={item + 1}>{item + 1}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
