@@ -52,37 +52,54 @@ export default function FormArticle({stateForm} : FormArticleProps) {
         console.log('Set Article');
     }
 
+    const onChangeReference = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setReference(e.target.value);
+    }
+
+    const onChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDescription(e.target.value);
+    }
+
+    const onChangePrixA = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPrixA(Number(e.target.value));
+    }
+
+    const onChangePrixV = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPrixV(Number(e.target.value));
+    }
+
+
     return (
         <div className="form-block">
             <h3 className="title-h3">Nouveau Article</h3>
             <form action="" className='form-content'>
                 <div className="form-group">
                     <label htmlFor="referenceArticle">Référence</label>
-                    <input type="text" placeholder="Saisissez votre référence" id="referenceArticle" value={reference}/>
+                    <input type="text" placeholder="Saisissez votre référence" id="referenceArticle" value={reference} onChange={onChangeReference}/>
                 </div>
                 <div className="form-group">
                     <label htmlFor="description">Description</label>
-                    <input type="text" placeholder="Saisissez votre description" id="description" value={description}/>
+                    <input type="text" placeholder="Saisissez votre description" id="description" value={description} onChange={onChangeDescription}/>
                 </div>
                 <div className="form-group">
                     <label htmlFor="taille">Taille</label>
-                    <select name="taille" id="taille" value={size}>
+                    <select name="taille" id="taille" value={size} onChange={(e) => setSize(e.target.value)}>
                         {taille.map((item, index) => <option key={index} value={item}>{item}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="quantite">Quantité</label>
-                    <select name="quantite" id="quantite" value={quantite}>
+                    <select name="quantite" id="quantite" value={quantite} onChange={(e) => setQuantite(parseInt(e.target.value))}>
                         {Array.from(Array(10).keys()).map((item, index) => <option key={index} value={item + 1}>{item + 1}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
                     <label htmlFor="prix">Prix d'achat</label>
-                    <input type="text" placeholder="Saisissez votre prix d'achat" id="prix" value={prixA}/>
+                    <input type="number" placeholder="Saisissez votre prix d'achat" id="prix" value={prixA} onChange={onChangePrixA}/>
                 </div>
                 <div className="form-group">
                     <label htmlFor="prixV">Prix de vente</label>
-                    <input type="text" placeholder="Saisissez votre prix de vente" id="prixV" value={prixV}/>
+                    <input type="number" placeholder="Saisissez votre prix de vente" id="prixV" value={prixV} onChange={onChangePrixV}/>
                 </div>
                 <div className="form-group form-submit">
                     <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : setArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
