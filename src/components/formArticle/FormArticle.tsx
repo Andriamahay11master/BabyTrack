@@ -3,6 +3,7 @@ import {taille} from '../../data/article';
 import { db } from '../../firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { useState } from 'react';
+import Alert from '../alert/Alert';
 interface FormArticleProps {
     stateForm : boolean
 }
@@ -78,6 +79,7 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                     <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : setArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
                 </div>
             </form>
+            {success && <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={true}/>}
         </div>
     )
 }
