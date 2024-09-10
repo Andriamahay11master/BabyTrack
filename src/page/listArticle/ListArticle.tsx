@@ -6,6 +6,7 @@ import { headerNav } from '../../data/header'
 import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
+import ExportExcel from '../../components/excel/ExportExcel'
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
@@ -124,6 +125,7 @@ export default function ListArticle() {
                     <div className="section-list">
                         <div className="table-filter">
                             <ExportCSV data={sales} />
+                            <ExportExcel data={sales} nameFile='sales' nameSheet='Sales'/>
                             <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
                               <option value="Vendu">Vendu</option>
                               <option value="Non Vendu">Non Vendu</option>
