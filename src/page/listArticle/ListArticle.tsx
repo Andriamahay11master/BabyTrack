@@ -7,6 +7,7 @@ import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
+import Alert from '../../components/alert/Alert'
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
@@ -168,6 +169,7 @@ export default function ListArticle() {
                             </table>
                         </div>
                     </div>
+                    <Alert state={true} icon="icon-checkmark" type="success" message="Enregistrement effectue avec succes"/>
                 </div>
             </div>
         </>
