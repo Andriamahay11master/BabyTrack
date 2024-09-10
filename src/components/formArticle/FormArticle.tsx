@@ -16,25 +16,28 @@ export default function FormArticle({stateForm} : FormArticleProps) {
     const [prixA, setPrixA] = useState(0);
     const [prixV, setPrixV] = useState(0);
     const [quantite, setQuantite] = useState(0);
-    const [date, setDate] = useState<Timestamp | null>(null);
+    const [date, setDate] = useState<Timestamp | null>(Timestamp.fromDate(new Date()));
     const [success, setSuccess] = useState(false);
 
     const addArticle = async () => {
         if(date){
-            await addDoc(collection(db, 'articles'), {
+            await addDoc(collection(db, 'article'), {
                 reference: reference,
                 description: description,
                 taille: size,
                 prixA: prixA,
                 prixV: prixV,
                 benefice: prixV - prixA,
-                dateA: Timestamp.fromDate(new Date(date.toString())),
-                dateV: Timestamp.fromDate(new Date(date.toString())),
+                dateA: date,
+                dateV: date,
                 stock: 1,
                 etat: false
             })
             setSuccess(true);
             resetForm();
+            await setTimeout(() => {
+                setSuccess(false);
+            }, 1000);
         }
         
     }
@@ -61,11 +64,23 @@ export default function FormArticle({stateForm} : FormArticleProps) {
     }
 
     const onChangePrixA = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPrixA(Number(e.target.value));
+        const inputValue = e.target.value;
+        // Vérifier si la valeur contient uniquement des chiffres
+        if (/^\d*$/.test(inputValue)) {
+            setPrixA(Number(inputValue)); // Si c'est un nombre, on le met à jour
+        } else {
+            setPrixA(0); // Sinon, on met une chaîne vide
+        }
     }
 
     const onChangePrixV = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPrixV(Number(e.target.value));
+        const inputValue = e.target.value;
+        // Vérifier si la valeur contient uniquement des chiffres
+        if (/^\d*$/.test(inputValue)) {
+            setPrixV(Number(inputValue)); // Si c'est un nombre, on le met à jour
+        } else {
+            setPrixV(0); // Sinon, on met une chaîne vide
+        }
     }
 
 
@@ -95,17 +110,17 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                 </div>
                 <div className="form-group">
                     <label htmlFor="prix">Prix d'achat</label>
-                    <input type="number" placeholder="Saisissez votre prix d'achat" id="prix" value={prixA} onChange={onChangePrixA}/>
+                    <input type="text" placeholder="Saisissez votre prix d'achat" id="prix" pattern='\d*' value={prixA} onChange={onChangePrixA}/>
                 </div>
                 <div className="form-group">
                     <label htmlFor="prixV">Prix de vente</label>
-                    <input type="number" placeholder="Saisissez votre prix de vente" id="prixV" value={prixV} onChange={onChangePrixV}/>
+                    <input type="text" placeholder="Saisissez votre prix de vente" id="prixV" pattern='\d*' value={prixV} onChange={onChangePrixV}/>
                 </div>
                 <div className="form-group form-submit">
                     <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : setArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
                 </div>
             </form>
-            {success && <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={true}/>}
+            <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
         </div>
     )
 }
