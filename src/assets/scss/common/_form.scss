@@ -10,6 +10,7 @@
             display: grid;
             grid-template-columns: 20% calc(80% - 20px);
             column-gap: 20px;
+            align-items: center;
             @include max(575px){
                 grid-template-columns: 100%;
                 row-gap: 5px;

@@ -34,8 +34,12 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                     </select>
                 </div>
                 <div className="form-group">
-                    <label htmlFor="prix">Prix</label>
-                    <input type="text" placeholder="Saisissez votre prix" id="prix"/>
+                    <label htmlFor="prix">Prix d'achat</label>
+                    <input type="text" placeholder="Saisissez votre prix d'achat" id="prix"/>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="prixV">Prix de vente</label>
+                    <input type="text" placeholder="Saisissez votre prix de vente" id="prixV"/>
                 </div>
                 <div className="form-group form-submit">
                     <button type="button" className='btn btn-primary' onClick={stateForm ? setArticle : addArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
