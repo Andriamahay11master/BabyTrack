@@ -9,6 +9,7 @@ import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from '../../firebase'
+import { formatNumber } from '../../data/function'
 
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
@@ -21,33 +22,7 @@ export default function ListArticle() {
         //list Sales
     }
 
-    //Get Articles
-    const getArticles = async () => {
-        try {
-            const q = query(collection(db, "article"), orderBy("reference", "asc"));
-            const querySnapshot = await getDocs(q);
-            const newData = querySnapshot.docs.map(doc => {
-                const dateA = new Date(doc.data().dateexpenses.seconds * 1000);
-                const dayLA = dateA.toDateString();
-                const dateV = new Date(doc.data().dateexpenses.seconds * 1000);
-                const dayLV = dateV.toDateString();
     
-                return {
-                    idsales: doc.data().reference,
-                    description: doc.data().description,
-                    taille: doc.data().taille,
-                    prixAchat: doc.data().prixA,
-                    prixVente: doc.data().prixV,
-                    dateA: dayLA.toString(),
-                    dateB: dayLV.toString(),
-                    etat: doc.data().etat,
-                }
-            });
-            setSales(newData);
-        } catch (error) {
-            console.error("Error fetching documents: ", error);
-        }
-    }
     //Get Sales sold in database
     const getSalesSold = () => {
         setSales([
@@ -132,10 +107,39 @@ export default function ListArticle() {
         ])
     }
 
+    //Get Articles
+    const getArticles = async () => {
+        try {
+            const q = query(collection(db, "article"), orderBy("reference", "asc"));
+            const querySnapshot = await getDocs(q);
+            const newData = querySnapshot.docs.map(doc => {
+                const dateA = new Date(doc.data().dateA.seconds * 1000);
+                const dayLA = dateA.toDateString();
+                const dateV = new Date(doc.data().dateV.seconds * 1000);
+                const dayLV = dateV.toDateString();
+    
+                return {
+                    idsales: doc.data().reference,
+                    description: doc.data().description,
+                    taille: doc.data().taille,
+                    prixAchat: doc.data().prixA,
+                    prixVente: doc.data().prixV,
+                    benefice: doc.data().benefice,
+                    dateA: dayLA.toString(),
+                    dateB: dayLV.toString(),
+                    etat: doc.data().etat,
+                }
+            });
+            setSales(newData);
+        } catch (error) {
+            console.error("Error fetching documents: ", error);
+        }
+    }
+
     useEffect(() => {
-        getArticles();
         getSalesSold();
         getSalesNotSold();
+        getArticles();
     }, [])
 
     const updateForm = (id : string) => {
@@ -189,9 +193,9 @@ export default function ListArticle() {
                                                 <td>{list.idsales}</td>
                                                 <td>{list.description}</td>
                                                 <td>{list.taille}</td>
-                                                <td>{list.prixAchat}</td>
-                                                <td>{list.prixVente}</td>
-                                                <td>{list.benefice}</td>
+                                                <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + 'MGA' : 0}</td>
+                                                <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + 'MGA' : 0}</td>
+                                                <td>{list.benefice ? formatNumber(list.benefice.toString()) + 'MGA' : 0}</td>
                                                 <td>{list.etat ? 'vendu' : 'Non vendu'}</td>
                                                 <td><div className="action-box"><button type="button" className='btn btn-icon' onClick={() => updateForm(list.idsales)}> <i className="icon-pencil"></i></button> <button className="btn btn-icon" onClick={() => deleteArticle(list.idsales)}><i className="icon-bin2"></i></button></div></td>
                                             </tr>
