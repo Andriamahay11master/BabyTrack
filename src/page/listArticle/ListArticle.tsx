@@ -7,6 +7,9 @@ import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from '../../firebase'
+
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
@@ -16,6 +19,34 @@ export default function ListArticle() {
         const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
         setInputFilterStateArticle(selectedStateArticle);
         //list Sales
+    }
+
+    //Get Articles
+    const getArticles = async () => {
+        try {
+            const q = query(collection(db, "article"), orderBy("reference", "asc"));
+            const querySnapshot = await getDocs(q);
+            const newData = querySnapshot.docs.map(doc => {
+                const dateA = new Date(doc.data().dateexpenses.seconds * 1000);
+                const dayLA = dateA.toDateString();
+                const dateV = new Date(doc.data().dateexpenses.seconds * 1000);
+                const dayLV = dateV.toDateString();
+    
+                return {
+                    idsales: doc.data().reference,
+                    description: doc.data().description,
+                    taille: doc.data().taille,
+                    prixAchat: doc.data().prixA,
+                    prixVente: doc.data().prixV,
+                    dateA: dayLA.toString(),
+                    dateB: dayLV.toString(),
+                    etat: doc.data().etat,
+                }
+            });
+            setSales(newData);
+        } catch (error) {
+            console.error("Error fetching documents: ", error);
+        }
     }
     //Get Sales sold in database
     const getSalesSold = () => {
@@ -102,6 +133,7 @@ export default function ListArticle() {
     }
 
     useEffect(() => {
+        getArticles();
         getSalesSold();
         getSalesNotSold();
     }, [])

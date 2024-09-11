@@ -4,6 +4,8 @@ export type SalesType = {
     taille: string,
     prixAchat: number,
     prixVente: number,
+    dateA?: string,
+    dateV?: string,
     benefice?: number,
     etat: boolean | string
 }
