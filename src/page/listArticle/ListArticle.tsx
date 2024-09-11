@@ -7,7 +7,7 @@ import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/firestore";
 import { db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 
@@ -150,6 +150,24 @@ export default function ListArticle() {
         console.log(id);
     }
 
+    //function article sold
+    const soldArticle = (id: string) => {
+        try{
+            const q = query(collection(db, "article"), where("reference", "==", id));
+            getDocs(q).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    updateDoc(doc.ref, {
+                        etat: true
+                    });
+                });
+            });
+            getArticles();
+        }
+        catch (error){ 
+            console.error("Error adding document: ", error);
+        }
+    }
+
     const salesExportExcel = sales.map(sale => ({
         ...sale,
         etat: sale.etat ? 'Vendu' : 'Non Vendu'
@@ -196,8 +214,8 @@ export default function ListArticle() {
                                                 <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + 'MGA' : 0}</td>
                                                 <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + 'MGA' : 0}</td>
                                                 <td>{list.benefice ? formatNumber(list.benefice.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.etat ? 'vendu' : 'Non vendu'}</td>
-                                                <td><div className="action-box"><button type="button" className='btn btn-icon' onClick={() => updateForm(list.idsales)}> <i className="icon-pencil"></i></button> <button className="btn btn-icon" onClick={() => deleteArticle(list.idsales)}><i className="icon-bin2"></i></button></div></td>
+                                                <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
+                                                <td><div className="action-box"><button type="button" className='btn btn-icon' onClick={() => soldArticle(list.idsales)}> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon' onClick={() => updateForm(list.idsales)}> <i className="icon-pencil"></i></button> <button className="btn btn-icon" onClick={() => deleteArticle(list.idsales)}><i className="icon-bin2"></i></button></div></td>
                                             </tr>
                                         ))}
                                     </tbody>
