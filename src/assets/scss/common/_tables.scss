@@ -68,7 +68,7 @@
         }
         .action-box{
             button{
-                &:first-child{
+                &:not(:last-child){
                     margin-right: 5px;
                 }
             }

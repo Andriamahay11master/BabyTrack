@@ -166,7 +166,7 @@ export default function ListArticle() {
                                                 <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + 'MGA' : 0}</td>
                                                 <td>{list.benefice ? formatNumber(list.benefice.toString()) + 'MGA' : 0}</td>
                                                 <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
-                                                <td><div className="action-box"><button type="button" className='btn btn-icon' onClick={() => soldArticle(list.idsales)}> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon' onClick={() => updateForm(list.idsales)}> <i className="icon-pencil"></i></button> <button className="btn btn-icon" onClick={() => deleteArticle(list.idsales)}><i className="icon-bin2"></i></button></div></td>
+                                                <td><div className="action-box"><button type="button" className='btn btn-icon tooltip' onClick={() => soldArticle(list.idsales)} data-title="Marquer comme vendu"> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon tooltip' onClick={() => updateForm(list.idsales)} data-title="Modifier l'article"> <i className="icon-pencil"></i></button> <button className="btn btn-icon tooltip" onClick={() => deleteArticle(list.idsales)} data-title="Supprimer l'article"><i className="icon-bin2"></i></button></div></td>
                                             </tr>
                                         ))}
                                     </tbody>
