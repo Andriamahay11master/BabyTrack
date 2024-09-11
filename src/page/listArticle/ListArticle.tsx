@@ -10,11 +10,13 @@ import ExportExcel from '../../components/excel/ExportExcel'
 import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/firestore";
 import { db } from '../../firebase'
 import { formatNumber } from '../../data/function'
+import Alert from '../../components/alert/Alert'
 
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
+    const [successSold, setSuccessSold] = useState(false);
 
     const handleFilterStateArticle = () => {
         const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
@@ -161,7 +163,11 @@ export default function ListArticle() {
                     });
                 });
             });
+            setSuccessSold(true);
             getArticles();
+            setTimeout(() => {
+                setSuccessSold(false);
+            }, 1000);
         }
         catch (error){ 
             console.error("Error adding document: ", error);
@@ -223,6 +229,7 @@ export default function ListArticle() {
                         </div>
                     </div>
                 </div>
+                <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
             </div>
         </>
     )
