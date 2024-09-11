@@ -18,17 +18,10 @@ export default function ListArticle() {
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
     const [successSold, setSuccessSold] = useState(false);
 
-    const handleFilterStateArticle = () => {
-        const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
-        setInputFilterStateArticle(selectedStateArticle);
-        //list Sales
-    }
-
-    
     //Get Sales sold in database
-    const getArticleSold = async () => {
+    const getArticleByState = async (state: string) => {
         try{
-            const q = query(collection(db, "article"), where("etat", "==", true));
+            const q = query(collection(db, "article"), where("etat", "==", state === 'Vendu' ? true : false));
             const querySnapshot = await getDocs(q);
             const newData = querySnapshot.docs.map(doc => {
                 const dateA = new Date(doc.data().dateA.seconds * 1000);
@@ -47,33 +40,6 @@ export default function ListArticle() {
             });
             setSales(newData);
         }catch(error){
-            console.log(error);
-        }
-    }
-
-    //Get Sales not sold in database
-    const getArticleNotSold = async () => {
-        try{
-            const q = query(collection(db, "article"), where("etat", "==", false));
-            const querySnapshot = await getDocs(q);
-            const newData = querySnapshot.docs.map(doc => {
-                const dateA = new Date(doc.data().dateA.seconds * 1000);
-                const dateV = new Date(doc.data().dateV.seconds * 1000);
-                return {
-                    idsales: doc.data().reference,
-                    description: doc.data().description,
-                    taille: doc.data().taille,
-                    prixAchat: doc.data().prixA,
-                    prixVente: doc.data().prixV,
-                    benefice: doc.data().benefice,
-                    dateA: dateA.toDateString(),
-                    dateV: dateV.toDateString(),
-                    etat: doc.data().etat
-                }
-            });
-            setSales(newData);
-        }
-        catch(error){
             console.log(error);
         }
     }
@@ -108,8 +74,6 @@ export default function ListArticle() {
     }
 
     useEffect(() => {
-        getArticleSold();
-        getArticleNotSold();
         getArticles();
     }, [])
 
@@ -140,6 +104,18 @@ export default function ListArticle() {
         }
         catch (error){ 
             console.error("Error adding document: ", error);
+        }
+    }
+
+    //ON Change select state filter
+    const handleFilterStateArticle = () => {
+        const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
+        setInputFilterStateArticle(selectedStateArticle);
+        //list Sales
+        if(selectedStateArticle === 'ALL'){
+            getArticles();
+        }else{
+            getArticleByState(selectedStateArticle);
         }
     }
 
