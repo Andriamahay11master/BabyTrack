@@ -1,3 +1,4 @@
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 import Header from '../../components/header/Header'
 import Kpi from '../../components/kpi/Kpi'
@@ -9,89 +10,66 @@ import { SalesType } from '../../models/Sales'
 
 import './dashboard.scss'
 import { useEffect, useState } from 'react'
+import { db } from '../../firebase'
 export default function Dashboard() {
     const [salesSold, setSalesSold] = useState(Array<SalesType>);
     const [salesNotSold, setSalesNotSold] = useState(Array<SalesType>);
 
     //Get Sales sold in database
-    const getSalesSold = () => {
-        setSalesSold([
-            {
-                idsales: 'NE 001',
-                description: 'T-shirt 1',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: true
-            },
-            {
-                idsales: 'NE 002',
-                description: 'T-shirt 2',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: true
-            }
-        ])
+    const getArticleSold = async () => {
+        try{
+            const q = query(collection(db, "article"), where("etat", "==", true));
+            const querySnapshot = await getDocs(q);
+            const newData = querySnapshot.docs.map(doc => {
+                const dateA = new Date(doc.data().dateA.seconds * 1000);
+                const dateV = new Date(doc.data().dateV.seconds * 1000);
+                return {
+                    idsales: doc.data().reference,
+                    description: doc.data().description,
+                    taille: doc.data().taille,
+                    prixAchat: doc.data().prixA,
+                    prixVente: doc.data().prixV,
+                    benefice: doc.data().benefice,
+                    dateA: dateA.toDateString(),
+                    dateV: dateV.toDateString(),
+                    etat: doc.data().etat
+                }
+            });
+            setSalesSold(newData);
+        }catch(error){
+            console.log(error);
+        }
     }
 
     //Get Sales not sold in database
-    const getSalesNotSold = () => {
-        setSalesNotSold([
-            {
-                idsales: 'NE 003',
-                description: 'T-shirt 3',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            },
-            {
-                idsales: 'NE 004',
-                description: 'T-shirt 4',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            },
-            {
-                idsales: 'NE 004',
-                description: 'T-shirt 4',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            },
-            {
-                idsales: 'NE 005',
-                description: 'T-shirt 5',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            },
-            {
-                idsales: 'NE 006',
-                description: 'T-shirt 6',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            },
-            {
-                idsales: 'NE 007',
-                description: 'T-shirt 7',
-                taille: 'L',
-                prixAchat: 2000,
-                prixVente:4000,
-                etat: false
-            }
-        ])
+    const getArticleNotSold = async () => {
+        try{
+            const q = query(collection(db, "article"), where("etat", "==", false));
+            const querySnapshot = await getDocs(q);
+            const newData = querySnapshot.docs.map(doc => {
+                const dateA = new Date(doc.data().dateA.seconds * 1000);
+                const dateV = new Date(doc.data().dateV.seconds * 1000);
+                return {
+                    idsales: doc.data().reference,
+                    description: doc.data().description,
+                    taille: doc.data().taille,
+                    prixAchat: doc.data().prixA,
+                    prixVente: doc.data().prixV,
+                    benefice: doc.data().benefice,
+                    dateA: dateA.toDateString(),
+                    dateV: dateV.toDateString(),
+                    etat: doc.data().etat
+                }
+            });
+            setSalesNotSold(newData);
+        }catch(error){
+            console.log(error);
+        }
     }
 
     useEffect(() => {
-        getSalesSold();
-        getSalesNotSold();
+        getArticleSold();
+        getArticleNotSold();
     }, [])
     return (
         <>
