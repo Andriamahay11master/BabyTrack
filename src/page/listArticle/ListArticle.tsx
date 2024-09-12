@@ -85,10 +85,16 @@ export default function ListArticle() {
     //GetArticlesBYMonth&Year
     const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
         try {
-            // Calculer le premier jour du mois et l'année spécifiés
-            const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Les mois sont 0-indexés dans JavaScript
-            // Calculer le dernier jour du mois
-            const endOfMonth = new Date(year, month, 0, 23, 59, 59); // 0 jour du mois suivant revient au dernier jour du mois courant
+            let startOfMonth = null, endOfMonth = null;
+            if (month === 13) {
+                // Si month est égal à 13, définir la plage pour toute l'année
+                startOfMonth = new Date(year, 0, 1, 0, 0, 0); // 1er janvier de l'année spécifiée
+                endOfMonth = new Date(year, 11, 31, 23, 59, 59); // 31 décembre de l'année spécifiée
+            } else {
+                // Calculer le premier et le dernier jour du mois spécifié
+                startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Mois 0-indexé
+                endOfMonth = new Date(year, month, 0, 23, 59, 59); // Dernier jour du mois
+            }
             let q = null;
             if(state === 'Vendu'){
                 q = query(
@@ -145,7 +151,7 @@ export default function ListArticle() {
 
     useEffect(() => {
         getArticlesByMonthYear(Number(inputFilterMonthArticle),Number(inputFilterYearArticle), inputFilterStateArticle);
-    }, [])
+    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle]);
 
     const updateForm = (id : string) => {
         console.log(id);
