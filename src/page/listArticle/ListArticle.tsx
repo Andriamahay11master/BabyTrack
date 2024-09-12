@@ -75,6 +75,47 @@ export default function ListArticle() {
         }
     }
 
+    //GetArticlesBYMonth&Year
+    const getArticlesByMonthYear = async (month: number, year: number) => {
+        try {
+            // Calculer le premier jour du mois et l'année spécifiés
+            const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Les mois sont 0-indexés dans JavaScript
+            // Calculer le dernier jour du mois
+            const endOfMonth = new Date(year, month, 0, 23, 59, 59); // 0 jour du mois suivant revient au dernier jour du mois courant
+    
+            // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
+            const q = query(
+                collection(db, "article"),
+                where("dateA", ">=", startOfMonth),
+                where("dateA", "<=", endOfMonth),
+                orderBy("dateA", "asc")
+            );
+    
+            const querySnapshot = await getDocs(q);
+            const newData = querySnapshot.docs.map(doc => {
+                const dateA = new Date(doc.data().dateA.seconds * 1000);
+                const dayLA = dateA.toDateString();
+                const dateV = new Date(doc.data().dateV.seconds * 1000);
+                const dayLV = dateV.toDateString();
+    
+                return {
+                    idsales: doc.data().reference,
+                    description: doc.data().description,
+                    taille: doc.data().taille,
+                    prixAchat: doc.data().prixA,
+                    prixVente: doc.data().prixV,
+                    benefice: doc.data().benefice,
+                    dateA: dayLA.toString(),
+                    dateB: dayLV.toString(),
+                    etat: doc.data().etat,
+                };
+            });
+            setSales(newData);
+        } catch (error) {
+            console.error("Error fetching documents: ", error);
+        }
+    };
+
     useEffect(() => {
         getArticles();
     }, [])
