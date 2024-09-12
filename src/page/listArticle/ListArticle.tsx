@@ -14,13 +14,17 @@ import Alert from '../../components/alert/Alert'
 import {months} from '../../data/article'
 
 export default function ListArticle() {
+    const date = new Date();
+    const yearNow = date.getFullYear();
+    const monthNow = date.getMonth() + 1;
+
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
     const inputFilterRefYearArticle = React.createRef<HTMLSelectElement>();
-    const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState('ALL');
+    const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState(yearNow.toString());
     const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
-    const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState('ALL');
+    const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
     const [successSold, setSuccessSold] = useState(false);
 
     //Get Sales sold in database
@@ -170,22 +174,22 @@ export default function ListArticle() {
         const selectedStateArticle = inputFilterRefYearArticle.current?.value || '';
         setInputFilterYearArticle(selectedStateArticle);
         //list Sales
-        if(selectedStateArticle === 'ALL'){
-            getArticles();
+        if(selectedStateArticle === yearNow.toString()){
+            getArticlesByMonthYear(monthNow, yearNow);
         }else{
-            getArticleByState(selectedStateArticle);
+            getArticlesByMonthYear(parseInt(selectedStateArticle), yearNow);
         }
     }
 
     //ON Change select month filter
     const handleFilterMonthArticle = () => {
         const selectedStateArticle = inputFilterRefMonthArticle.current?.value || '';
-        setInputFilterYearArticle(selectedStateArticle);
+        setInputFilterMonthArticle(selectedStateArticle);
         //list Sales
-        if(selectedStateArticle === 'ALL'){
-            getArticles();
+        if(selectedStateArticle === monthNow.toString()){
+            getArticlesByMonthYear(monthNow, yearNow);
         }else{
-            getArticleByState(selectedStateArticle);
+            getArticlesByMonthYear(monthNow, parseInt(selectedStateArticle));
         }
     }
 
