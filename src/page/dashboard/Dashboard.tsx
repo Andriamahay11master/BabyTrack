@@ -67,9 +67,45 @@ export default function Dashboard() {
         }
     }
 
+    //GetTotalArticle sold
+    const salesSoldTotal = salesSold.reduce((a, b) => {
+        return a + b.prixVente
+    }, 0);
+
+    //GetTotalBenefice on article sold
+    const salesBenefice = salesSold.reduce((a, b) => {
+        return a + (b?.benefice || 0)
+    }, 0)
+    
+    //Update KPI depending on list database
+    const updateKpi = kpi.map((item) => {
+        if (item.title === 'Articles vendus') {
+            return {
+                ...item,
+                value: salesSold.length
+            }
+        } else if (item.title === 'Articles non vendus') {
+            return {
+                ...item,
+                value: salesNotSold.length
+            }
+        } else if (item.title === 'Bénéfices') {
+            return {
+                ...item,
+                value: salesBenefice
+            }
+        } else if (item.title === 'Vente Totales') {
+            return {
+                ...item,
+                value: salesSoldTotal
+            }
+        }
+    })
+
     useEffect(() => {
         getArticleSold();
         getArticleNotSold();
+        console.log(salesSold)
     }, [])
     return (
         <>
@@ -80,7 +116,7 @@ export default function Dashboard() {
                         <Breadcrumb items={breadcrumbDashboard}/>
                     </div>
                     <div className="main-section listKpi">
-                            {kpi.map((item, index) => <Kpi key={index} icon={item.icon} title={item.title} value={item.value} currency={item.currency} />)}
+                            {updateKpi.map((item, index) => <Kpi key={index} icon={item.icon} title={item.title} value={item.value} currency={item.currency} />)}
                     </div>
                     <div className='main-section detailKpi'>
                         <div className="detailKpi-item">
