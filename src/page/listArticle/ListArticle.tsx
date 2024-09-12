@@ -16,6 +16,8 @@ export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
+    const inputFilterRefYearArticle = React.createRef<HTMLSelectElement>();
+    const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState('ALL');
     const [successSold, setSuccessSold] = useState(false);
 
     //Get Sales sold in database
@@ -119,6 +121,18 @@ export default function ListArticle() {
         }
     }
 
+    //ON Change select year filter
+    const handleFilterYearArticle = () => {
+        const selectedStateArticle = inputFilterRefYearArticle.current?.value || '';
+        setInputFilterYearArticle(selectedStateArticle);
+        //list Sales
+        if(selectedStateArticle === 'ALL'){
+            getArticles();
+        }else{
+            getArticleByState(selectedStateArticle);
+        }
+    }
+
     const salesExportExcel = sales.map(sale => ({
         ...sale,
         etat: sale.etat ? 'Vendu' : 'Non Vendu'
@@ -136,6 +150,9 @@ export default function ListArticle() {
                         <div className="table-filter">
                             <ExportCSV data={sales} />
                             <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
+                            <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
+                                {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
+                            </select> 
                             <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
                               <option value="Vendu">Vendu</option>
                               <option value="Non Vendu">Non Vendu</option>
