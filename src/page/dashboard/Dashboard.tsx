@@ -7,6 +7,7 @@ import { breadcrumbDashboard } from '../../data/breadcrumb'
 import { headerNav } from '../../data/header'
 import { kpi } from '../../data/kpi'
 import { SalesType } from '../../models/Sales'
+import {formatNumber} from '../../data/function';
 
 import './dashboard.scss'
 import { useEffect, useState } from 'react'
@@ -78,34 +79,34 @@ export default function Dashboard() {
     }, 0)
     
     //Update KPI depending on list database
+    // Création d'un objet de correspondance pour les valeurs des KPI
+    const kpiValues: { [key: string]: number } = {
+        'Articles vendus': salesSold.length,
+        'Articles non vendus': salesNotSold.length,
+        'Bénéfices': salesBenefice,
+        'Ventes Totales': salesSoldTotal
+    };
+
+    // Mise à jour des KPI en utilisant la correspondance basée sur le titre
+    // Mise à jour des KPI avec formatage conditionnel
     const updateKpi = kpi.map((item) => {
-        if (item.title === 'Articles vendus') {
-            return {
-                ...item,
-                value: salesSold.length
-            }
-        } else if (item.title === 'Articles non vendus') {
-            return {
-                ...item,
-                value: salesNotSold.length
-            }
-        } else if (item.title === 'Bénéfices') {
-            return {
-                ...item,
-                value: salesBenefice
-            }
-        } else if (item.title === 'Vente Totales') {
-            return {
-                ...item,
-                value: salesSoldTotal
-            }
+        let value: string | number = kpiValues[item.title] ?? item.value;
+
+        // Appliquer formatNumber uniquement pour 'Bénéfices' et 'Ventes Totales'
+        if (item.title === 'Bénéfices' || item.title === 'Ventes Totales') {
+            value = formatNumber(value.toString());
         }
-    })
+
+        return {
+            ...item,
+            value
+        };
+    });
+
 
     useEffect(() => {
         getArticleSold();
         getArticleNotSold();
-        console.log(salesSold)
     }, [])
     return (
         <>

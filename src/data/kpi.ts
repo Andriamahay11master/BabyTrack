@@ -7,7 +7,7 @@ const kpi  = [
     },
     {
         icon: 'FaDollarSign',
-        title: 'Vente Totales',
+        title: 'Ventes Totales',
         value: 0,
         currency: 'MGA'
     },
