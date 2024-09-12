@@ -11,6 +11,7 @@ import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/
 import { db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 import Alert from '../../components/alert/Alert'
+import {months} from '../../data/article'
 
 export default function ListArticle() {
     const [sales, setSales] = useState(Array<SalesType>);
@@ -18,6 +19,8 @@ export default function ListArticle() {
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');
     const inputFilterRefYearArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState('ALL');
+    const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
+    const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState('ALL');
     const [successSold, setSuccessSold] = useState(false);
 
     //Get Sales sold in database
@@ -174,6 +177,18 @@ export default function ListArticle() {
         }
     }
 
+    //ON Change select month filter
+    const handleFilterMonthArticle = () => {
+        const selectedStateArticle = inputFilterRefMonthArticle.current?.value || '';
+        setInputFilterYearArticle(selectedStateArticle);
+        //list Sales
+        if(selectedStateArticle === 'ALL'){
+            getArticles();
+        }else{
+            getArticleByState(selectedStateArticle);
+        }
+    }
+
     const salesExportExcel = sales.map(sale => ({
         ...sale,
         etat: sale.etat ? 'Vendu' : 'Non Vendu'
@@ -191,6 +206,9 @@ export default function ListArticle() {
                         <div className="table-filter">
                             <ExportCSV data={sales} />
                             <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
+                            <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
+                                {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
+                            </select> 
                             <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
                                 {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
                             </select> 

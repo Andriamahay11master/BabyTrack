@@ -33,4 +33,8 @@ const taille = [
     "10 ans",
 ];
 
-export { taille }
+const months = [
+    "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"
+]
+
+export { taille, months }
