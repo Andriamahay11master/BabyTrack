@@ -99,7 +99,7 @@ export default function ListArticle() {
                     orderBy("dateA", "asc")
                 );
             }
-            else if(state === 'Non vendu' ){
+            else if(state === 'Non Vendu' ){
                 q = query(
                     collection(db, "article"),
                     where("dateA", ">=", startOfMonth),
@@ -108,7 +108,7 @@ export default function ListArticle() {
                     orderBy("dateA", "asc")
                 );
             }
-            else{
+            else {
                 // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
                 q = query(
                     collection(db, "article"),
@@ -118,7 +118,6 @@ export default function ListArticle() {
                 );
             }
             
-    
             const querySnapshot = await getDocs(q);
             const newData = querySnapshot.docs.map(doc => {
                 const dateA = new Date(doc.data().dateA.seconds * 1000);
