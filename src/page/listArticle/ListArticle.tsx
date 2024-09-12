@@ -28,75 +28,96 @@ export default function ListArticle() {
     const [successSold, setSuccessSold] = useState(false);
 
     //Get Sales sold in database
-    const getArticleByState = async (state: string) => {
-        try{
-            const q = query(collection(db, "article"), where("etat", "==", state === 'Vendu' ? true : false));
-            const querySnapshot = await getDocs(q);
-            const newData = querySnapshot.docs.map(doc => {
-                const dateA = new Date(doc.data().dateA.seconds * 1000);
-                const dateV = new Date(doc.data().dateV.seconds * 1000);
-                return {
-                    idsales: doc.data().reference,
-                    description: doc.data().description,
-                    taille: doc.data().taille,
-                    prixAchat: doc.data().prixA,
-                    prixVente: doc.data().prixV,
-                    benefice: doc.data().benefice,
-                    dateA: dateA.toDateString(),
-                    dateV: dateV.toDateString(),
-                    etat: doc.data().etat
-                }
-            });
-            setSales(newData);
-        }catch(error){
-            console.log(error);
-        }
-    }
+    // const getArticleByState = async (state: string) => {
+    //     try{
+    //         const q = query(collection(db, "article"), where("etat", "==", state === 'Vendu' ? true : false));
+    //         const querySnapshot = await getDocs(q);
+    //         const newData = querySnapshot.docs.map(doc => {
+    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
+    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
+    //             return {
+    //                 idsales: doc.data().reference,
+    //                 description: doc.data().description,
+    //                 taille: doc.data().taille,
+    //                 prixAchat: doc.data().prixA,
+    //                 prixVente: doc.data().prixV,
+    //                 benefice: doc.data().benefice,
+    //                 dateA: dateA.toDateString(),
+    //                 dateV: dateV.toDateString(),
+    //                 etat: doc.data().etat
+    //             }
+    //         });
+    //         setSales(newData);
+    //     }catch(error){
+    //         console.log(error);
+    //     }
+    // }
 
     //Get Articles
-    const getArticles = async () => {
-        try {
-            const q = query(collection(db, "article"), orderBy("reference", "asc"));
-            const querySnapshot = await getDocs(q);
-            const newData = querySnapshot.docs.map(doc => {
-                const dateA = new Date(doc.data().dateA.seconds * 1000);
-                const dayLA = dateA.toDateString();
-                const dateV = new Date(doc.data().dateV.seconds * 1000);
-                const dayLV = dateV.toDateString();
+    // const getArticles = async () => {
+    //     try {
+    //         const q = query(collection(db, "article"), orderBy("reference", "asc"));
+    //         const querySnapshot = await getDocs(q);
+    //         const newData = querySnapshot.docs.map(doc => {
+    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
+    //             const dayLA = dateA.toDateString();
+    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
+    //             const dayLV = dateV.toDateString();
     
-                return {
-                    idsales: doc.data().reference,
-                    description: doc.data().description,
-                    taille: doc.data().taille,
-                    prixAchat: doc.data().prixA,
-                    prixVente: doc.data().prixV,
-                    benefice: doc.data().benefice,
-                    dateA: dayLA.toString(),
-                    dateB: dayLV.toString(),
-                    etat: doc.data().etat,
-                }
-            });
-            setSales(newData);
-        } catch (error) {
-            console.error("Error fetching documents: ", error);
-        }
-    }
+    //             return {
+    //                 idsales: doc.data().reference,
+    //                 description: doc.data().description,
+    //                 taille: doc.data().taille,
+    //                 prixAchat: doc.data().prixA,
+    //                 prixVente: doc.data().prixV,
+    //                 benefice: doc.data().benefice,
+    //                 dateA: dayLA.toString(),
+    //                 dateB: dayLV.toString(),
+    //                 etat: doc.data().etat,
+    //             }
+    //         });
+    //         setSales(newData);
+    //     } catch (error) {
+    //         console.error("Error fetching documents: ", error);
+    //     }
+    // }
 
     //GetArticlesBYMonth&Year
-    const getArticlesByMonthYear = async (month: number, year: number) => {
+    const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
         try {
             // Calculer le premier jour du mois et l'année spécifiés
             const startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Les mois sont 0-indexés dans JavaScript
             // Calculer le dernier jour du mois
             const endOfMonth = new Date(year, month, 0, 23, 59, 59); // 0 jour du mois suivant revient au dernier jour du mois courant
-    
-            // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
-            const q = query(
-                collection(db, "article"),
-                where("dateA", ">=", startOfMonth),
-                where("dateA", "<=", endOfMonth),
-                orderBy("dateA", "asc")
-            );
+            let q = null;
+            if(state === 'Vendu'){
+                q = query(
+                    collection(db, "article"),
+                    where("dateA", ">=", startOfMonth),
+                    where("dateA", "<=", endOfMonth),
+                    where("etat", "==", true),
+                    orderBy("dateA", "asc")
+                );
+            }
+            else if(state === 'Non vendu' ){
+                q = query(
+                    collection(db, "article"),
+                    where("dateA", ">=", startOfMonth),
+                    where("dateA", "<=", endOfMonth),
+                    where("etat", "==", false),
+                    orderBy("dateA", "asc")
+                );
+            }
+            else{
+                // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
+                q = query(
+                    collection(db, "article"),
+                    where("dateA", ">=", startOfMonth),
+                    where("dateA", "<=", endOfMonth),
+                    orderBy("dateA", "asc")
+                );
+            }
+            
     
             const querySnapshot = await getDocs(q);
             const newData = querySnapshot.docs.map(doc => {
@@ -124,7 +145,7 @@ export default function ListArticle() {
     };
 
     useEffect(() => {
-        getArticles();
+        getArticlesByMonthYear(Number(inputFilterMonthArticle),Number(inputFilterYearArticle), inputFilterStateArticle);
     }, [])
 
     const updateForm = (id : string) => {
@@ -147,7 +168,7 @@ export default function ListArticle() {
                 });
             });
             setSuccessSold(true);
-            getArticles();
+            getArticlesByMonthYear(Number(inputFilterMonthArticle), Number(inputFilterYearArticle), inputFilterStateArticle);
             setTimeout(() => {
                 setSuccessSold(false);
             }, 1000);
@@ -162,10 +183,17 @@ export default function ListArticle() {
         const selectedStateArticle = inputFilterRefStateArticle.current?.value || '';
         setInputFilterStateArticle(selectedStateArticle);
         //list Sales
-        if(selectedStateArticle === 'ALL'){
-            getArticles();
-        }else{
-            getArticleByState(selectedStateArticle);
+        if(inputFilterYearArticle !== yearNow.toString() && inputFilterMonthArticle !== monthNow.toString()){
+            getArticlesByMonthYear(Number(inputFilterMonthArticle), Number(inputFilterYearArticle), selectedStateArticle);
+        }
+        else if(inputFilterYearArticle !== yearNow.toString() && inputFilterMonthArticle === monthNow.toString()){
+            getArticlesByMonthYear(monthNow, Number(inputFilterYearArticle), selectedStateArticle);
+        }
+        else if(inputFilterYearArticle === yearNow.toString() && inputFilterMonthArticle !== monthNow.toString()){
+            getArticlesByMonthYear(Number(inputFilterMonthArticle), yearNow, selectedStateArticle);
+        }
+        else{
+            getArticlesByMonthYear(monthNow, yearNow, selectedStateArticle);
         }
     }
 
@@ -175,9 +203,9 @@ export default function ListArticle() {
         setInputFilterYearArticle(selectedStateArticle);
         //list Sales
         if(selectedStateArticle === yearNow.toString()){
-            getArticlesByMonthYear(monthNow, yearNow);
+            getArticlesByMonthYear(monthNow, yearNow, inputFilterStateArticle);
         }else{
-            getArticlesByMonthYear(parseInt(selectedStateArticle), yearNow);
+            getArticlesByMonthYear(parseInt(selectedStateArticle), yearNow, inputFilterStateArticle);
         }
     }
 
@@ -187,9 +215,9 @@ export default function ListArticle() {
         setInputFilterMonthArticle(selectedStateArticle);
         //list Sales
         if(selectedStateArticle === monthNow.toString()){
-            getArticlesByMonthYear(monthNow, yearNow);
+            getArticlesByMonthYear(monthNow, yearNow, inputFilterStateArticle);
         }else{
-            getArticlesByMonthYear(monthNow, parseInt(selectedStateArticle));
+            getArticlesByMonthYear(monthNow, parseInt(selectedStateArticle), inputFilterStateArticle);
         }
     }
 
