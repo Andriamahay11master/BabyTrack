@@ -11,12 +11,16 @@ import {formatNumber} from '../../data/function';
 import {yearNow, monthNow} from '../../data/article'
 import './dashboard.scss'
 import React, { useEffect, useState } from 'react'
-import { db } from '../../firebase'
+import { auth, db } from '../../firebase'
 import { months } from '../../data/article'
+import { onAuthStateChanged } from 'firebase/auth'
+import Splashscreen from '../splashscreen/Splashscreen'
+import { Navigate } from 'react-router-dom'
 export default function Dashboard() {
     const [salesSold, setSalesSold] = useState(Array<SalesType>);
     const [salesNotSold, setSalesNotSold] = useState(Array<SalesType>);
-
+    const [userUID, setUserUID] = React.useState('');
+    const [userMail, setUserMail] = React.useState('');
     
     const inputFilterRefYearArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState(yearNow.toString());
@@ -36,7 +40,7 @@ export default function Dashboard() {
                 startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Mois 0-indexé
                 endOfMonth = new Date(year, month, 0, 23, 59, 59); // Dernier jour du mois
             }
-            const q = query(collection(db, "article"), where("dateA", ">=", startOfMonth),
+            const q = query(collection(db, "article"), where("uidUser", "==", userUID), where("dateA", ">=", startOfMonth),
             where("dateA", "<=", endOfMonth), where("etat", "==", true), orderBy("reference", "asc"));
 
             const querySnapshot = await getDocs(q);
@@ -74,7 +78,7 @@ export default function Dashboard() {
                 startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Mois 0-indexé
                 endOfMonth = new Date(year, month, 0, 23, 59, 59); // Dernier jour du mois
             }
-            const q = query(collection(db, "article"), where("dateA", ">=", startOfMonth),
+            const q = query(collection(db, "article"), where("uidUser", "==", userUID), where("dateA", ">=", startOfMonth),
             where("dateA", "<=", endOfMonth), where("etat", "==", false));
             const querySnapshot = await getDocs(q);
             const newData = querySnapshot.docs.map(doc => {
@@ -165,10 +169,24 @@ export default function Dashboard() {
     useEffect(() => {
         getArticleSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
         getArticleNotSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const email = user.email;
+              const uid = user.uid
+              setUserMail(email ?? '');
+              setUserUID(uid ?? '');
+            } else {
+                <Navigate to="/login"/>
+            }
+          });
+
     }, [inputFilterMonthArticle, inputFilterYearArticle]);
     return (
         <>
-            <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>
+        {(userMail !== '') ? (
+            <>
+            <Header linkMenu={headerNav} userMail={userMail}/>
             <div className='main-page'>
                 <div className="container">
                     <div className="main-page-top">
@@ -198,7 +216,12 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+            </>
+        ) : (
+            <Splashscreen/>
+        )}
         </>
-        
     )
 }
+
+Dashboard.requireAuth = true

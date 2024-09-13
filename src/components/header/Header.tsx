@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './header.scss';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Navigate, NavLink, useLocation } from 'react-router-dom';
+import { auth } from '../../firebase';
+import { signOut } from 'firebase/auth';
 // import { auth } from './firebase';
 
 interface HeaderProps {
@@ -34,12 +36,12 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
         };
     }, [navbarOpen]);
 
-    // const handleSignOut = () => {
-    //     signOut(auth).then(() => {
-    //         localStorage.setItem("isLoggedIn", 'false');
-    //         router.push('/login');
-    //     })
-    // };
+    const handleSignOut = () => {
+        signOut(auth).then(() => {
+            localStorage.setItem("isLoggedIn", 'false');
+            <Navigate to="/login"/>
+        })
+    };
 
     return (
         <header className={`sectHeader sectHeader--fixed${navbarOpen ? ' show-menu' : ''}`}>
@@ -88,7 +90,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                             </div>
 
                             <div className="block-bottom-mobile">
-                                <button className="btn btn-icon" title='Bouton to login'>
+                                <button className="btn btn-icon" title='Bouton to logout' onClick={handleSignOut}>
                                     <i className="icon-log-out"></i>
                                 </button>
                             </div>
@@ -108,7 +110,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                                 </div>
                                 <p>{userMail}</p>
                             </div>}
-                            <button className="btn btn-icon" title='Bouton to login'>
+                            <button className="btn btn-icon" title='Bouton to logout' onClick={handleSignOut}>
                                 <i className="icon-log-out"></i>
                             </button>
                         </div>
