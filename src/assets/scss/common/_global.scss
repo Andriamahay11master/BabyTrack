@@ -16,7 +16,8 @@ html{
 
 *::-webkit-scrollbar
 {
-	width: 6px;
+	width: 5px;
+  height: 5px;
 	background-color: $white-f4;
 }
 
@@ -102,10 +103,8 @@ h4, .title-h4{
 }
 
 .container {
-  margin: auto;
-  width: 1200px;
+  margin: 0 135px;
   @include max(1440px) {
-    width: auto;
     margin: 0 50px;
   }
   @include max(768px) {

@@ -2,7 +2,7 @@
     padding-top: 75px;
     background: $default-bg;
     min-height: 100vh;
-    @include max(768px){
+    @include max(1200px){
         padding-top: 85px;
     }
     .main-page-top{
@@ -10,13 +10,39 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
+        @include max(768px){
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .filter-main{
+            display: flex;
+            align-items: center;
+            @include max(575px){
+              flex-direction: column;
+              width: 100%;
+              align-items: flex-end;
+            }
+            span{
+              margin-right: 10px;
+              @include max(575px){
+                margin-right: 0;
+                margin-bottom: 10px;
+              }
+            }
+            select{
+              &:not(:last-child){
+                margin-right: 20px;
+                @include max(575px){
+                  margin-right: 0;
+                  margin-bottom: 10px;
+                }
+              }
+            }
+        }
         select{
-            width: 250px;
+            width: 150px;
             padding: 0 10px;
             color: black;
-            @include max(768px){
-                width: 200px;
-            }
         }
     }
     .main-section{
@@ -38,9 +64,9 @@
         }
         &.detailKpi{
           display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          column-gap: 40px;
-          @include max(768px){
+          grid-template-columns: repeat(2, calc(50% - 20px));
+          grid-gap: 40px;
+          @include max(992px){
             grid-template-columns: 100%;
           }
           .detailKpi-item{

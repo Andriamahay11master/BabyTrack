@@ -173,7 +173,8 @@ export default function Dashboard() {
                 <div className="container">
                     <div className="main-page-top">
                         <Breadcrumb items={breadcrumbDashboard}/>
-                        <div className="choice-compte">
+                        <div className="filter-main">
+                            <span>Choisissez le mois et l'année :</span>
                             <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
                                 {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
                             </select> 
