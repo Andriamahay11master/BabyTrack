@@ -8,13 +8,20 @@ import { headerNav } from '../../data/header'
 import { kpi } from '../../data/kpi'
 import { SalesType } from '../../models/Sales'
 import {formatNumber} from '../../data/function';
-
+import {yearNow, monthNow} from '../../data/article'
 import './dashboard.scss'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase'
+import { months } from '../../data/article'
 export default function Dashboard() {
     const [salesSold, setSalesSold] = useState(Array<SalesType>);
     const [salesNotSold, setSalesNotSold] = useState(Array<SalesType>);
+
+    
+    const inputFilterRefYearArticle = React.createRef<HTMLSelectElement>();
+    const [inputFilterYearArticle, setInputFilterYearArticle] = React.useState(yearNow.toString());
+    const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
+    const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
 
     //Get Sales sold in database
     const getArticleSold = async () => {
@@ -115,6 +122,14 @@ export default function Dashboard() {
                 <div className="container">
                     <div className="main-page-top">
                         <Breadcrumb items={breadcrumbDashboard}/>
+                        <div className="choice-compte">
+                            <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
+                                {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
+                            </select> 
+                            <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
+                                {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
+                            </select> 
+                        </div>
                     </div>
                     <div className="main-section listKpi">
                             {updateKpi.map((item, index) => <Kpi key={index} icon={item.icon} title={item.title} value={item.value} currency={item.currency} />)}

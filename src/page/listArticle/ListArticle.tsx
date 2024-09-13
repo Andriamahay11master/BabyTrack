@@ -12,12 +12,10 @@ import { db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 import Alert from '../../components/alert/Alert'
 import {months} from '../../data/article'
+import {yearNow, monthNow} from '../../data/article'
 
 export default function ListArticle() {
-    const date = new Date();
-    const yearNow = date.getFullYear();
-    const monthNow = date.getMonth() + 1;
-
+   
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterStateArticle, setInputFilterStateArticle] = React.useState('ALL');

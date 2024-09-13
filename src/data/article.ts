@@ -37,4 +37,9 @@ const months = [
     "Janvier", "Fevrier", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre","Tous"
 ]
 
-export { taille, months }
+
+const date = new Date();
+const yearNow = date.getFullYear();
+const monthNow = date.getMonth() + 1;
+
+export { taille, months, yearNow, monthNow }
