@@ -67,8 +67,8 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                                 <nav className="menuNav"> 
                                     <div className="cntNavBox"> 
                                         <ul className="cntNav">
-                                            {linkMenu.map((link) => {
-                                                const isActive = location.pathname === link.href
+                                            {linkMenu.map((link, index) => {
+                                                const isActive = location.pathname === link.href || (location.pathname === '/' && index === 0)
                                                 
                                                 return (
                                                     <li key={link.name}>
@@ -88,7 +88,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                             </div>
 
                             <div className="block-bottom-mobile">
-                                <button className="btn btn-link" title='Bouton to login'>
+                                <button className="btn btn-icon" title='Bouton to login'>
                                     <i className="icon-log-out"></i>
                                 </button>
                             </div>
@@ -108,7 +108,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                                 </div>
                                 <p>{userMail}</p>
                             </div>}
-                            <button className="btn btn-link" title='Bouton to login'>
+                            <button className="btn btn-icon" title='Bouton to login'>
                                 <i className="icon-log-out"></i>
                             </button>
                         </div>

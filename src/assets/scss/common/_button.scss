@@ -111,6 +111,7 @@
   &.btn-icon {
     padding: 0;
     background: transparent;
+    @include max(575px){font-size: 20px;}
   }
 
   &.btn-mobile {

@@ -270,10 +270,9 @@
             align-items: center;
             justify-content: space-between;
             position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            border-top: 1px solid rgba(#000, 0.2);
+            right: 7px;
+            top: 0;
+            padding: 5px;
         }
         .list-language{
             @include max(1200px){
