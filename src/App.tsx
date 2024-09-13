@@ -11,16 +11,27 @@ import SignIn from './page/signIn/SignIn'
 import ForgotPassword from './page/forgotPassword/ForgotPassword'
 import Splashscreen from './page/splashscreen/Splashscreen'
 import { useEffect, useState } from 'react'
+import { onAuthStateChanged, User } from 'firebase/auth'
+import { auth } from './firebase'
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 3000); // Simulate a 3-second load time
-    return () => clearTimeout(timer);
-  }, [])
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setUser(user);
+            setIsFetching(false);
+            return; 
+        }
+        setUser(null);
+        setIsFetching(false);
+    })
+    return () => unsubscribe();
+})
 
-  if (loading) {
+  if (isFetching) {
     return <Splashscreen />
   }
 
@@ -31,7 +42,7 @@ function App() {
         <Route path="/addArticle" element={<AddArticle />}></Route>
         <Route path="/listArticle" element={<ListArticle />}></Route>
         <Route path="/statistics" element={<Statistics />}></Route>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/login" element={<Login user={user}/>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
