@@ -13,6 +13,7 @@ import Splashscreen from './page/splashscreen/Splashscreen'
 import { useEffect, useState } from 'react'
 import { onAuthStateChanged, User } from 'firebase/auth'
 import { auth } from './firebase'
+import { ProtectedRoute } from './ProtectedRoute'
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -38,7 +39,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route path="/dashboard" element={<ProtectedRoute user={user}><Dashboard /></ProtectedRoute>}></Route>
         <Route path="/addArticle" element={<AddArticle />}></Route>
         <Route path="/listArticle" element={<ListArticle />}></Route>
         <Route path="/statistics" element={<Statistics />}></Route>
