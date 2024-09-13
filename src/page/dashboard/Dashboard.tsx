@@ -62,9 +62,20 @@ export default function Dashboard() {
     }
 
     //Get Sales not sold in database
-    const getArticleNotSold = async () => {
+    const getArticleNotSold = async (month: number, year: number) => {
         try{
-            const q = query(collection(db, "article"), where("etat", "==", false));
+            let startOfMonth = null, endOfMonth = null;
+            if (month === 13) {
+                // Si month est égal à 13, définir la plage pour toute l'année
+                startOfMonth = new Date(year, 0, 1, 0, 0, 0); // 1er janvier de l'année spécifiée
+                endOfMonth = new Date(year, 11, 31, 23, 59, 59); // 31 décembre de l'année spécifiée
+            } else {
+                // Calculer le premier et le dernier jour du mois spécifié
+                startOfMonth = new Date(year, month - 1, 1, 0, 0, 0); // Mois 0-indexé
+                endOfMonth = new Date(year, month, 0, 23, 59, 59); // Dernier jour du mois
+            }
+            const q = query(collection(db, "article"), where("dateA", ">=", startOfMonth),
+            where("dateA", "<=", endOfMonth), where("etat", "==", false));
             const querySnapshot = await getDocs(q);
             const newData = querySnapshot.docs.map(doc => {
                 const dateA = new Date(doc.data().dateA.seconds * 1000);
