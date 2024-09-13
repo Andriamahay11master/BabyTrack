@@ -7,5 +7,5 @@ interface ProtectedRouteProps {
   }
 
 export const ProtectedRoute = ({ children, user }: ProtectedRouteProps) => {
-    return user && localStorage.getItem('isLoggedIn') === 'true' ? children : <Navigate to="/signin" replace/>
+    return user && localStorage.getItem('isLoggedIn') === 'true' ? children : <Navigate to="/login" replace/>
 }

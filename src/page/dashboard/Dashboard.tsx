@@ -169,7 +169,7 @@ export default function Dashboard() {
     useEffect(() => {
         getArticleSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
         getArticleNotSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
-
+        
         onAuthStateChanged(auth, (user) => {
             if (user) {
               const email = user.email;
@@ -180,8 +180,7 @@ export default function Dashboard() {
                 <Navigate to="/login"/>
             }
           });
-
-    }, [inputFilterMonthArticle, inputFilterYearArticle]);
+    }, [inputFilterMonthArticle, inputFilterYearArticle, userMail]);
     return (
         <>
         {(userMail !== '') ? (
