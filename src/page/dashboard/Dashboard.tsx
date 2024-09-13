@@ -133,11 +133,39 @@ export default function Dashboard() {
         };
     });
 
+    //ON Change select year filter
+    const handleFilterYearArticle = () => {
+        const selectedStateArticle = inputFilterRefYearArticle.current?.value || '';
+        setInputFilterYearArticle(selectedStateArticle);
+        //list Sales
+        if(selectedStateArticle === yearNow.toString()){
+            getArticleSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+            getArticleNotSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+        }else{
+            getArticleSold(Number(inputFilterMonthArticle), parseInt(selectedStateArticle));
+            getArticleNotSold(Number(inputFilterMonthArticle), parseInt(selectedStateArticle));
+        }
+    }
+
+    //ON Change select month filter
+    const handleFilterMonthArticle = () => {
+        const selectedStateArticle = inputFilterRefMonthArticle.current?.value || '';
+        setInputFilterMonthArticle(selectedStateArticle);
+        //list Sales
+        if(selectedStateArticle === monthNow.toString()){
+            getArticleSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+            getArticleNotSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+        }else{
+            getArticleSold(parseInt(selectedStateArticle), Number(inputFilterYearArticle));
+            getArticleNotSold(parseInt(selectedStateArticle), Number(inputFilterYearArticle));
+        }
+    }
+
 
     useEffect(() => {
-        getArticleSold();
-        getArticleNotSold();
-    }, [])
+        getArticleSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+        getArticleNotSold(Number(inputFilterMonthArticle), Number(inputFilterYearArticle));
+    }, [inputFilterMonthArticle, inputFilterYearArticle]);
     return (
         <>
             <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>
