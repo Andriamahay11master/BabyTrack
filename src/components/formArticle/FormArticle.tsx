@@ -6,9 +6,10 @@ import { useState } from 'react';
 import Alert from '../alert/Alert';
 interface FormArticleProps {
     stateForm : boolean
+    uidUser : string
 }
 
-export default function FormArticle({stateForm} : FormArticleProps) {
+export default function FormArticle({stateForm, uidUser} : FormArticleProps) {
 
     const [reference, setReference] = useState('');
     const [description, setDescription] = useState('');
@@ -31,7 +32,8 @@ export default function FormArticle({stateForm} : FormArticleProps) {
                 dateA: date,
                 dateV: date,
                 stock: 1,
-                etat: false
+                etat: false,
+                uidUser: uidUser
             })
             setSuccess(true);
             resetForm();
