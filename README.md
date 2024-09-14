@@ -22,8 +22,8 @@ Cette application est un outil de gestion pour suivre les ventes d'articles pour
 1. Clonez le dépôt :
 
 ```bash
-git clone https://github.com/Andriamahay11master/BabyTrack.git
-cd BabyTrack
+git clone https://github.com/Andriamahay11master/SimplySweet.git
+cd SimplySweet
 ```
 
 2. Installez les dépendances :
