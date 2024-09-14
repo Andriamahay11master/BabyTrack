@@ -6,18 +6,6 @@
     #{$prop}: $value;
  }
  
- @mixin maxPortrait($value,$value2: 851px) {
-    @media (min-width: $value2) and (max-width: $value) and (orientation: portrait) {
-        @content;
-    }
- }
- 
- @mixin maxForceOrientationPortrait($value) {
-    @media (max-width: $value) and (orientation: landscape) {
-        @content;
-    }
- }
- 
  @mixin max($value) {
     @media (max-width: $value) {
         @content;
