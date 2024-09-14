@@ -90,7 +90,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                             </div>
 
                             <div className="block-bottom-mobile">
-                                <button className="btn btn-icon" title='Bouton to logout' onClick={handleSignOut}>
+                                <button className="btn btn-icon tooltip" data-title='Se déconnecter' onClick={handleSignOut}>
                                     <i className="icon-log-out"></i>
                                 </button>
                             </div>
@@ -110,7 +110,7 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                                 </div>
                                 <p>{userMail}</p>
                             </div>}
-                            <button className="btn btn-icon" title='Bouton to logout' onClick={handleSignOut}>
+                            <button className="btn btn-icon tooltip" data-title='Se déconnecter' onClick={handleSignOut}>
                                 <i className="icon-log-out"></i>
                             </button>
                         </div>

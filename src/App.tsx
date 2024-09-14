@@ -40,8 +40,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/dashboard" element={<ProtectedRoute user={user}><Dashboard /></ProtectedRoute>}></Route>
-        <Route path="/addArticle" element={<AddArticle />}></Route>
-        <Route path="/listArticle" element={<ListArticle />}></Route>
+        <Route path="/addArticle" element={<ProtectedRoute user={user}><AddArticle /></ProtectedRoute>}></Route>
+        <Route path="/listArticle" element={<ProtectedRoute user={user}><ListArticle /></ProtectedRoute>}></Route>
         <Route path="/statistics" element={<Statistics />}></Route>
         <Route path="/login" element={<Login user={user}/>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>

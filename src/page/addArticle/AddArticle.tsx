@@ -49,3 +49,5 @@ export default function AddArticle() {
         </>
     )
 }
+
+AddArticle.requireAuth = true

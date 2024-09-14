@@ -11,11 +11,11 @@
     {
         name: 'ListArticle',
         href: '/listArticle'
-    },
-    {
-        name: 'Statistics',
-        href: '/statistics'
     }
+    // {
+    //     name: 'Statistics',
+    //     href: '/statistics'
+    // }
   ];
 
   export {headerNav}
