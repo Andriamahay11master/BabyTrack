@@ -15,6 +15,7 @@ import {months} from '../../data/article'
 import {yearNow, monthNow} from '../../data/article'
 import { onAuthStateChanged } from 'firebase/auth'
 import { Navigate } from 'react-router-dom'
+import Splashscreen from '../splashscreen/Splashscreen'
 
 export default function ListArticle() {
 
@@ -196,62 +197,68 @@ export default function ListArticle() {
 
     return (
         <>
-            <Header linkMenu={headerNav} userMail={userMail}/>    
-            <div className='main-page'>
-                <div className="container">
-                    <div className="main-page-top">
-                        <Breadcrumb items={breadcrumbListArticle}/>
-                    </div>
-                    <div className="section-list">
-                        <div className="table-filter">
-                            <ExportCSV data={sales} />
-                            <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
-                            <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
-                                {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
-                            </select> 
-                            <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
-                                {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
-                            </select> 
-                            <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
-                              <option value="Vendu">Vendu</option>
-                              <option value="Non Vendu">Non Vendu</option>
-                              <option value="ALL">Tous</option>
-                            </select> 
+        {(userMail !== '') ? (
+            <>
+                <Header linkMenu={headerNav} userMail={userMail}/>    
+                <div className='main-page'>
+                    <div className="container">
+                        <div className="main-page-top">
+                            <Breadcrumb items={breadcrumbListArticle}/>
                         </div>
-                        <div className="list-block list-view">
-                            <table className='list-table'>
-                                    <thead>
-                                        <tr>
-                                            <th>Réference</th>
-                                            <th>Description</th>
-                                            <th>Taille</th>
-                                            <th>Prix d'achat</th>
-                                            <th>Prix de vente</th>
-                                            <th>Bénéfice</th>
-                                            <th>Etat</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {sales.map((list, index) => (
-                                            <tr key={index}>
-                                                <td>{list.idsales}</td>
-                                                <td>{list.description}</td>
-                                                <td>{list.taille}</td>
-                                                <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.benefice ? formatNumber(list.benefice.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
-                                                <td><div className="action-box"><button type="button" className='btn btn-icon tooltip' onClick={() => soldArticle(list.idsales)} data-title="Marquer comme vendu"> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon tooltip' onClick={() => updateForm(list.idsales)} data-title="Modifier l'article"> <i className="icon-pencil"></i></button> <button className="btn btn-icon tooltip" onClick={() => deleteArticle(list.idsales)} data-title="Supprimer l'article"><i className="icon-bin2"></i></button></div></td>
+                        <div className="section-list">
+                            <div className="table-filter">
+                                <ExportCSV data={sales} />
+                                <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
+                                <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
+                                    {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
+                                </select> 
+                                <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
+                                    {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
+                                </select> 
+                                <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
+                                <option value="Vendu">Vendu</option>
+                                <option value="Non Vendu">Non Vendu</option>
+                                <option value="ALL">Tous</option>
+                                </select> 
+                            </div>
+                            <div className="list-block list-view">
+                                <table className='list-table'>
+                                        <thead>
+                                            <tr>
+                                                <th>Réference</th>
+                                                <th>Description</th>
+                                                <th>Taille</th>
+                                                <th>Prix d'achat</th>
+                                                <th>Prix de vente</th>
+                                                <th>Bénéfice</th>
+                                                <th>Etat</th>
+                                                <th>Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            {sales.map((list, index) => (
+                                                <tr key={index}>
+                                                    <td>{list.idsales}</td>
+                                                    <td>{list.description}</td>
+                                                    <td>{list.taille}</td>
+                                                    <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.benefice ? formatNumber(list.benefice.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
+                                                    <td><div className="action-box"><button type="button" className='btn btn-icon tooltip' onClick={() => soldArticle(list.idsales)} data-title="Marquer comme vendu"> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon tooltip' onClick={() => updateForm(list.idsales)} data-title="Modifier l'article"> <i className="icon-pencil"></i></button> <button className="btn btn-icon tooltip" onClick={() => deleteArticle(list.idsales)} data-title="Supprimer l'article"><i className="icon-bin2"></i></button></div></td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
                 </div>
-                <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
-            </div>
+             </>
+        ) : (
+            <Splashscreen/>
+        )}
         </>
     )
 }
