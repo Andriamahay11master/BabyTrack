@@ -8,13 +8,20 @@ import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
 import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/firestore";
-import { db } from '../../firebase'
+import { auth, db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 import Alert from '../../components/alert/Alert'
 import {months} from '../../data/article'
 import {yearNow, monthNow} from '../../data/article'
+import { onAuthStateChanged } from 'firebase/auth'
+import { Navigate } from 'react-router-dom'
+import Splashscreen from '../splashscreen/Splashscreen'
 
 export default function ListArticle() {
+
+    
+    const [userUID, setUserUID] = React.useState('');
+    const [userMail, setUserMail] = React.useState('');
    
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
@@ -24,61 +31,6 @@ export default function ListArticle() {
     const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
     const [successSold, setSuccessSold] = useState(false);
-
-    //Get Sales sold in database
-    // const getArticleByState = async (state: string) => {
-    //     try{
-    //         const q = query(collection(db, "article"), where("etat", "==", state === 'Vendu' ? true : false));
-    //         const querySnapshot = await getDocs(q);
-    //         const newData = querySnapshot.docs.map(doc => {
-    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
-    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
-    //             return {
-    //                 idsales: doc.data().reference,
-    //                 description: doc.data().description,
-    //                 taille: doc.data().taille,
-    //                 prixAchat: doc.data().prixA,
-    //                 prixVente: doc.data().prixV,
-    //                 benefice: doc.data().benefice,
-    //                 dateA: dateA.toDateString(),
-    //                 dateV: dateV.toDateString(),
-    //                 etat: doc.data().etat
-    //             }
-    //         });
-    //         setSales(newData);
-    //     }catch(error){
-    //         console.log(error);
-    //     }
-    // }
-
-    //Get Articles
-    // const getArticles = async () => {
-    //     try {
-    //         const q = query(collection(db, "article"), orderBy("reference", "asc"));
-    //         const querySnapshot = await getDocs(q);
-    //         const newData = querySnapshot.docs.map(doc => {
-    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
-    //             const dayLA = dateA.toDateString();
-    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
-    //             const dayLV = dateV.toDateString();
-    
-    //             return {
-    //                 idsales: doc.data().reference,
-    //                 description: doc.data().description,
-    //                 taille: doc.data().taille,
-    //                 prixAchat: doc.data().prixA,
-    //                 prixVente: doc.data().prixV,
-    //                 benefice: doc.data().benefice,
-    //                 dateA: dayLA.toString(),
-    //                 dateB: dayLV.toString(),
-    //                 etat: doc.data().etat,
-    //             }
-    //         });
-    //         setSales(newData);
-    //     } catch (error) {
-    //         console.error("Error fetching documents: ", error);
-    //     }
-    // }
 
     //GetArticlesBYMonth&Year
     const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
@@ -97,6 +49,7 @@ export default function ListArticle() {
             if(state === 'Vendu'){
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     where("etat", "==", true),
@@ -106,6 +59,7 @@ export default function ListArticle() {
             else if(state === 'Non Vendu' ){
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     where("etat", "==", false),
@@ -116,6 +70,7 @@ export default function ListArticle() {
                 // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     orderBy("dateA", "asc")
@@ -149,7 +104,18 @@ export default function ListArticle() {
 
     useEffect(() => {
         getArticlesByMonthYear(Number(inputFilterMonthArticle),Number(inputFilterYearArticle), inputFilterStateArticle);
-    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle]);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const email = user.email;
+              const uid = user.uid
+              setUserMail(email ?? '');
+              setUserUID(uid ?? '');
+            } else {
+                <Navigate to="/login"/>
+            }
+          });
+    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle, userMail]);
 
     const updateForm = (id : string) => {
         console.log(id);
@@ -231,62 +197,70 @@ export default function ListArticle() {
 
     return (
         <>
-            <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>    
-            <div className='main-page'>
-                <div className="container">
-                    <div className="main-page-top">
-                        <Breadcrumb items={breadcrumbListArticle}/>
-                    </div>
-                    <div className="section-list">
-                        <div className="table-filter">
-                            <ExportCSV data={sales} />
-                            <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
-                            <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
-                                {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
-                            </select> 
-                            <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
-                                {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
-                            </select> 
-                            <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
-                              <option value="Vendu">Vendu</option>
-                              <option value="Non Vendu">Non Vendu</option>
-                              <option value="ALL">Tous</option>
-                            </select> 
+        {(userMail !== '') ? (
+            <>
+                <Header linkMenu={headerNav} userMail={userMail}/>    
+                <div className='main-page'>
+                    <div className="container">
+                        <div className="main-page-top">
+                            <Breadcrumb items={breadcrumbListArticle}/>
                         </div>
-                        <div className="list-block list-view">
-                            <table className='list-table'>
-                                    <thead>
-                                        <tr>
-                                            <th>Réference</th>
-                                            <th>Description</th>
-                                            <th>Taille</th>
-                                            <th>Prix d'achat</th>
-                                            <th>Prix de vente</th>
-                                            <th>Bénéfice</th>
-                                            <th>Etat</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {sales.map((list, index) => (
-                                            <tr key={index}>
-                                                <td>{list.idsales}</td>
-                                                <td>{list.description}</td>
-                                                <td>{list.taille}</td>
-                                                <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.benefice ? formatNumber(list.benefice.toString()) + 'MGA' : 0}</td>
-                                                <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
-                                                <td><div className="action-box"><button type="button" className='btn btn-icon tooltip' onClick={() => soldArticle(list.idsales)} data-title="Marquer comme vendu"> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon tooltip' onClick={() => updateForm(list.idsales)} data-title="Modifier l'article"> <i className="icon-pencil"></i></button> <button className="btn btn-icon tooltip" onClick={() => deleteArticle(list.idsales)} data-title="Supprimer l'article"><i className="icon-bin2"></i></button></div></td>
+                        <div className="section-list">
+                            <div className="table-filter">
+                                <ExportCSV data={sales} />
+                                <ExportExcel data={salesExportExcel} nameFile='sales' nameSheet='Sales'/>
+                                <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
+                                    {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
+                                </select> 
+                                <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
+                                    {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
+                                </select> 
+                                <select name="filter-state" id="filter-state" ref={inputFilterRefStateArticle} onChange={handleFilterStateArticle} value={inputFilterStateArticle}>
+                                <option value="Vendu">Vendu</option>
+                                <option value="Non Vendu">Non Vendu</option>
+                                <option value="ALL">Tous</option>
+                                </select> 
+                            </div>
+                            <div className="list-block list-view">
+                                <table className='list-table'>
+                                        <thead>
+                                            <tr>
+                                                <th>Réference</th>
+                                                <th>Description</th>
+                                                <th>Taille</th>
+                                                <th>Prix d'achat</th>
+                                                <th>Prix de vente</th>
+                                                <th>Bénéfice</th>
+                                                <th>Etat</th>
+                                                <th>Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            {sales.map((list, index) => (
+                                                <tr key={index}>
+                                                    <td>{list.idsales}</td>
+                                                    <td>{list.description}</td>
+                                                    <td>{list.taille}</td>
+                                                    <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.prixVente ? formatNumber(list.prixVente.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.benefice ? formatNumber(list.benefice.toString()) + ' MGA' : 0}</td>
+                                                    <td>{list.etat ? 'Vendu' : 'Non vendu'}</td>
+                                                    <td><div className="action-box"><button type="button" className='btn btn-icon tooltip' onClick={() => soldArticle(list.idsales)} data-title="Marquer comme vendu"> <i className="icon-checkmark"></i></button> <button type="button" className='btn btn-icon tooltip' onClick={() => updateForm(list.idsales)} data-title="Modifier l'article"> <i className="icon-pencil"></i></button> <button className="btn btn-icon tooltip" onClick={() => deleteArticle(list.idsales)} data-title="Supprimer l'article"><i className="icon-bin2"></i></button></div></td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
+                    <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
                 </div>
-                <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
-            </div>
+             </>
+        ) : (
+            <Splashscreen/>
+        )}
         </>
     )
 }
+
+ListArticle.requireAuth = true
