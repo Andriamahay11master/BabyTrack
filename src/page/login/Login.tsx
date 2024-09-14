@@ -97,7 +97,7 @@ export default function Login({user} : SigninProps) {
                             {(errorExist && errorForm) && <p className="error-form">{errorForm}</p>}
                         </div>
                         <div className="form-group form-forgot">
-                            <Link className="btn btn-link" to="/forgot">Mot de passe oublié</Link>
+                            <Link className="btn btn-link" to="/forgotPassword">Mot de passe oublié</Link>
                         </div>
                         <div className="form-group form-submit">
                             <button className="btn btn-primary" onClick={connectAccount}>Connexion</button>
