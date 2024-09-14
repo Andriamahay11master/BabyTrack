@@ -7,7 +7,6 @@ import ListArticle from './page/listArticle/ListArticle'
 import Statistics from './page/statistics/Statistics'
 import Login from './page/login/Login'
 import SignUp from './page/signup/SignUp'
-import SignIn from './page/signIn/SignIn'
 import ForgotPassword from './page/forgotPassword/ForgotPassword'
 import Splashscreen from './page/splashscreen/Splashscreen'
 import { useEffect, useState } from 'react'
@@ -45,7 +44,6 @@ function App() {
         <Route path="/statistics" element={<Statistics />}></Route>
         <Route path="/login" element={<Login user={user}/>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/signin" element={<SignIn />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path="/" element={<ProtectedRoute user={user}><Dashboard /></ProtectedRoute>}></Route>
       </Routes>
