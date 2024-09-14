@@ -49,16 +49,16 @@ export default function Header({linkMenu, userMail} : HeaderProps) {
                         <div className="cntLogoMobile">
                                 <NavLink to="/dashboard" title='link to dashboard'>
                                     <figure>
-                                        <img src="/BabyTrack.jpg" alt="Logo Site" width={200} height={200} title='BabyTrack logo image'/>
+                                        <img src="/SimplySweet.jpg" alt="Logo Site" width={200} height={200} title='SimplySweet logo image'/>
                                     </figure>
-                                    <span className='cntLogo-text'>BabyTrack</span>
+                                    <span className='cntLogo-text'>SimplySweet</span>
                                 </NavLink>
                         </div>
                         <div className={`headerInternContent${navbarOpen ? ' show-menu' : ''}`}>
                             <div className="cntlogo">
                                 <NavLink to="/dashboard" title='link to dashboard'>
                                     <figure>
-                                        <img src="/BabyTrack.jpg" alt="Logo Site" width={200} height={200} title='BabyTrack logo image'/>
+                                        <img src="/SimplySweet.jpg" alt="Logo Site" width={200} height={200} title='SimplySweet logo image'/>
                                     </figure>
                                 </NavLink>
                             </div>
