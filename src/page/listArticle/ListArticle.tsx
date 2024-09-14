@@ -8,13 +8,19 @@ import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
 import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/firestore";
-import { db } from '../../firebase'
+import { auth, db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 import Alert from '../../components/alert/Alert'
 import {months} from '../../data/article'
 import {yearNow, monthNow} from '../../data/article'
+import { onAuthStateChanged } from 'firebase/auth'
+import { Navigate } from 'react-router-dom'
 
 export default function ListArticle() {
+
+    
+    const [userUID, setUserUID] = React.useState('');
+    const [userMail, setUserMail] = React.useState('');
    
     const [sales, setSales] = useState(Array<SalesType>);
     const inputFilterRefStateArticle = React.createRef<HTMLSelectElement>();
@@ -24,61 +30,6 @@ export default function ListArticle() {
     const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
     const [successSold, setSuccessSold] = useState(false);
-
-    //Get Sales sold in database
-    // const getArticleByState = async (state: string) => {
-    //     try{
-    //         const q = query(collection(db, "article"), where("etat", "==", state === 'Vendu' ? true : false));
-    //         const querySnapshot = await getDocs(q);
-    //         const newData = querySnapshot.docs.map(doc => {
-    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
-    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
-    //             return {
-    //                 idsales: doc.data().reference,
-    //                 description: doc.data().description,
-    //                 taille: doc.data().taille,
-    //                 prixAchat: doc.data().prixA,
-    //                 prixVente: doc.data().prixV,
-    //                 benefice: doc.data().benefice,
-    //                 dateA: dateA.toDateString(),
-    //                 dateV: dateV.toDateString(),
-    //                 etat: doc.data().etat
-    //             }
-    //         });
-    //         setSales(newData);
-    //     }catch(error){
-    //         console.log(error);
-    //     }
-    // }
-
-    //Get Articles
-    // const getArticles = async () => {
-    //     try {
-    //         const q = query(collection(db, "article"), orderBy("reference", "asc"));
-    //         const querySnapshot = await getDocs(q);
-    //         const newData = querySnapshot.docs.map(doc => {
-    //             const dateA = new Date(doc.data().dateA.seconds * 1000);
-    //             const dayLA = dateA.toDateString();
-    //             const dateV = new Date(doc.data().dateV.seconds * 1000);
-    //             const dayLV = dateV.toDateString();
-    
-    //             return {
-    //                 idsales: doc.data().reference,
-    //                 description: doc.data().description,
-    //                 taille: doc.data().taille,
-    //                 prixAchat: doc.data().prixA,
-    //                 prixVente: doc.data().prixV,
-    //                 benefice: doc.data().benefice,
-    //                 dateA: dayLA.toString(),
-    //                 dateB: dayLV.toString(),
-    //                 etat: doc.data().etat,
-    //             }
-    //         });
-    //         setSales(newData);
-    //     } catch (error) {
-    //         console.error("Error fetching documents: ", error);
-    //     }
-    // }
 
     //GetArticlesBYMonth&Year
     const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
@@ -97,6 +48,7 @@ export default function ListArticle() {
             if(state === 'Vendu'){
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     where("etat", "==", true),
@@ -106,6 +58,7 @@ export default function ListArticle() {
             else if(state === 'Non Vendu' ){
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     where("etat", "==", false),
@@ -116,6 +69,7 @@ export default function ListArticle() {
                 // Créer une requête Firebase pour filtrer uniquement les articles du mois et de l'année spécifiés
                 q = query(
                     collection(db, "article"),
+                    where("uidUser", "==", userUID),
                     where("dateA", ">=", startOfMonth),
                     where("dateA", "<=", endOfMonth),
                     orderBy("dateA", "asc")
@@ -149,7 +103,18 @@ export default function ListArticle() {
 
     useEffect(() => {
         getArticlesByMonthYear(Number(inputFilterMonthArticle),Number(inputFilterYearArticle), inputFilterStateArticle);
-    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle]);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              const email = user.email;
+              const uid = user.uid
+              setUserMail(email ?? '');
+              setUserUID(uid ?? '');
+            } else {
+                <Navigate to="/login"/>
+            }
+          });
+    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle, userMail]);
 
     const updateForm = (id : string) => {
         console.log(id);
@@ -231,7 +196,7 @@ export default function ListArticle() {
 
     return (
         <>
-            <Header linkMenu={headerNav} userMail="hirimanana@yahoo.fr"/>    
+            <Header linkMenu={headerNav} userMail={userMail}/>    
             <div className='main-page'>
                 <div className="container">
                     <div className="main-page-top">
