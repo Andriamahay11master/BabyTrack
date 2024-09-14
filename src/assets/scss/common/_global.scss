@@ -90,18 +90,6 @@ h4, .title-h4{
   }
 }
 
-.paragraphe {
-  color: #000;
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 1;
-  font-family: $font-family;
-
-  @include max(1280px){
-    font-size: 18px;
-  }
-}
-
 .container {
   margin: 0 135px;
   @include max(1440px) {
@@ -123,32 +111,6 @@ h4, .title-h4{
   }
 }
 
-.text-limit-1-lines {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-}
-
-.text-limit-2-lines {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.text-limit-3-lines {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
 
 
 
