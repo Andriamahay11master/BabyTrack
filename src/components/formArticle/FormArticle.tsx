@@ -4,7 +4,7 @@ import { db } from '../../firebase';
 import { collection, addDoc, Timestamp, where, getDocs, query, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Alert from '../alert/Alert';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 interface FormArticleProps {
     stateForm : boolean
     uidUser : string
@@ -13,6 +13,7 @@ interface FormArticleProps {
 
 export default function FormArticle({stateForm, uidUser, referenceArticle} : FormArticleProps) {
 
+    const navigate = useNavigate();
     const [reference, setReference] = useState('');
     const [description, setDescription] = useState('');
     const [size, setSize] = useState('1 mois');
@@ -68,11 +69,14 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     }
 
     const updateArticle = async () => {
-        if(date){
-            const q = query(collection(db, "article"), where("reference", "==", referenceArticle));
-            getDocs(q).then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    updateDoc(doc.ref, {
+        if (date) {
+            try {
+                const q = query(collection(db, "article"), where("reference", "==", referenceArticle));
+                const querySnapshot = await getDocs(q);
+    
+                // Parcourt les documents retournés et met à jour chacun
+                const updatePromises = querySnapshot.docs.map(async (doc) => {
+                    await updateDoc(doc.ref, {
                         reference: reference,
                         description: description,
                         taille: size,
@@ -83,16 +87,32 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                         dateV: date,
                         stock: quantite,
                         etat: false
-                    })
-                })
-            })
-            setUpdate(true);
-            await setTimeout(() => {
-                setUpdate(false);
-            }, 1000);
-            <Navigate to="/addArticle"/>
+                    });
+                });
+    
+                // Attends que toutes les mises à jour soient effectuées
+                await Promise.all(updatePromises);
+    
+                // Si la mise à jour est réussie, mets à jour l'état et affiche l'alerte
+                setUpdate(true);
+                resetForm();  // Réinitialise le formulaire
+    
+                // Affiche l'alerte de succès avant la redirection
+                setTimeout(() => {
+                    setUpdate(false);
+                    navigate('/listArticle'); 
+                }, 1000);
+    
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour de l'article : ", error);
+                // Vous pouvez ajouter une gestion d'erreur ici, comme afficher un message d'erreur à l'utilisateur
+            }
+        } else {
+            // Si la date n'est pas fournie, vous pouvez afficher une alerte ou un message ici
+            alert("La date est requise pour mettre à jour l'article.");
         }
     }
+    
     const resetForm = () => {
         setReference('');
         setDescription('');
