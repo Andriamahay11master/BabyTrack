@@ -1,9 +1,10 @@
 import './formArticle.scss';
 import {taille} from '../../data/article';
 import { db } from '../../firebase';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { useState } from 'react';
+import { collection, addDoc, Timestamp, where, getDocs, query, updateDoc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import Alert from '../alert/Alert';
+import { Navigate } from 'react-router-dom';
 interface FormArticleProps {
     stateForm : boolean
     uidUser : string
@@ -20,6 +21,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [quantite, setQuantite] = useState(1);
     const [date, setDate] = useState<Timestamp | null>(Timestamp.fromDate(new Date()));
     const [success, setSuccess] = useState(false);
+    const [update, setUpdate] = useState(false);
 
     const addArticle = async () => {
         if(date){
@@ -45,6 +47,52 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         
     }
 
+    const displayValueArticle = async (id : string ) => {
+        try{
+            const q = query(collection(db, "article"), where("reference", "==", id));
+            getDocs(q).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    setReference(doc.data().reference);
+                    setDescription(doc.data().description);
+                    setSize(doc.data().taille);
+                    setPrixA(doc.data().prixA);
+                    setPrixV(doc.data().prixV);
+                    setQuantite(doc.data().stock);
+                    setDate(doc.data().dateA);
+                })
+            })
+        }
+        catch(error){
+            console.error("Error fetching documents: ", error);
+        }
+    }
+
+    const updateArticle = async () => {
+        if(date){
+            const q = query(collection(db, "article"), where("reference", "==", referenceArticle));
+            getDocs(q).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    updateDoc(doc.ref, {
+                        reference: reference,
+                        description: description,
+                        taille: size,
+                        prixA: prixA,
+                        prixV: prixV,
+                        benefice: prixV - prixA,
+                        dateA: date,
+                        dateV: date,
+                        stock: quantite,
+                        etat: false
+                    })
+                })
+            })
+            setUpdate(true);
+            await setTimeout(() => {
+                setUpdate(false);
+            }, 1000);
+            <Navigate to="/addArticle"/>
+        }
+    }
     const resetForm = () => {
         setReference('');
         setDescription('');
@@ -53,9 +101,6 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         setPrixV(0);
         setQuantite(1);
         setDate(null);
-    }
-    const setArticle = () => {
-        console.log('Set Article');
     }
 
     const onChangeReference = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +131,11 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         }
     }
 
+    useEffect(() => {
+        if(referenceArticle){
+            displayValueArticle(referenceArticle);
+        }
+    }, [referenceArticle])
 
     return (
         <div className="form-block">
@@ -120,10 +170,11 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                     <input type="text" placeholder="Saisissez votre prix de vente" id="prixV" pattern='\d*' value={prixV} onChange={onChangePrixV}/>
                 </div>
                 <div className="form-group form-submit">
-                    <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : setArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
+                    <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : updateArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
                 </div>
             </form>
             <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
+            <Alert icon="icon-checkmark" type="success" message="Modification article reussi" state={update ? true : false}/>
         </div>
     )
 }
