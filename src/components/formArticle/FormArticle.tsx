@@ -48,6 +48,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         
     }
 
+    //Affiche les valeurs de l'article pour chaque champs
     const displayValueArticle = async (id : string ) => {
         try{
             const q = query(collection(db, "article"), where("reference", "==", id));
