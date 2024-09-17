@@ -116,7 +116,7 @@ export default function ListArticle() {
                 <Navigate to="/login"/>
             }
           });
-    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle, userMail]);
+    }, [inputFilterMonthArticle, inputFilterYearArticle, inputFilterStateArticle, userMail, successRemoveArticle]);
 
     const updateForm = (id : string) => {
         console.log(id);

@@ -13,10 +13,10 @@ export default function FormArticle({stateForm, uidUser} : FormArticleProps) {
 
     const [reference, setReference] = useState('');
     const [description, setDescription] = useState('');
-    const [size, setSize] = useState('');
+    const [size, setSize] = useState('1 mois');
     const [prixA, setPrixA] = useState(0);
     const [prixV, setPrixV] = useState(0);
-    const [quantite, setQuantite] = useState(0);
+    const [quantite, setQuantite] = useState(1);
     const [date, setDate] = useState<Timestamp | null>(Timestamp.fromDate(new Date()));
     const [success, setSuccess] = useState(false);
 
