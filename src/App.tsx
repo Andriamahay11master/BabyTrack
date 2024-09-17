@@ -40,7 +40,7 @@ function App() {
       <Routes>
         <Route path="/dashboard" element={<ProtectedRoute user={user}><Dashboard /></ProtectedRoute>}></Route>
         <Route path="/addArticle" element={<ProtectedRoute user={user}><AddArticle state={true}/></ProtectedRoute>}></Route>
-        <Route path="/setArticle" element={<ProtectedRoute user={user}><AddArticle state={false}/></ProtectedRoute>}></Route>
+        <Route path="/setArticle/:id" element={<ProtectedRoute user={user}><AddArticle state={false} /></ProtectedRoute>}></Route>
         <Route path="/listArticle" element={<ProtectedRoute user={user}><ListArticle /></ProtectedRoute>}></Route>
         <Route path="/statistics" element={<Statistics />}></Route>
         <Route path="/login" element={<Login user={user}/>}></Route>

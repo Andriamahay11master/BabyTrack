@@ -7,14 +7,14 @@ import { headerNav } from '../../data/header'
 import './addArticle.scss'
 import { auth } from '../../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import Splashscreen from '../splashscreen/Splashscreen'
 
 interface AddArticleProps {
     state: boolean
-    referenceArticle?: string
 }
-export default function AddArticle({state, referenceArticle} : AddArticleProps) {
+export default function AddArticle({state} : AddArticleProps) {
+    const { id } = useParams<{ id: string }>(); // Récupère l'ID de l'URL
     const [userUID, setUserUID] = React.useState('');
     const [userMail, setUserMail] = React.useState('');
 
@@ -42,7 +42,7 @@ export default function AddArticle({state, referenceArticle} : AddArticleProps) 
                         </div>
                         <div className="main-section page-form">
                             <div className="section-form">
-                                {referenceArticle ? <FormArticle stateForm={state} uidUser={userUID} referenceArticle={referenceArticle}/> : <FormArticle stateForm={state} uidUser={userUID}/>}
+                                {id ? <FormArticle stateForm={state} uidUser={userUID} referenceArticle={id}/> : <FormArticle stateForm={state} uidUser={userUID}/>}
                             </div>
                         </div>
                     </div>

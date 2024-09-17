@@ -14,12 +14,12 @@ import Alert from '../../components/alert/Alert'
 import {months} from '../../data/article'
 import {yearNow, monthNow} from '../../data/article'
 import { onAuthStateChanged } from 'firebase/auth'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom';
 import Splashscreen from '../splashscreen/Splashscreen'
 
 export default function ListArticle() {
 
-    
+    const navigate = useNavigate();
     const [userUID, setUserUID] = React.useState('');
     const [userMail, setUserMail] = React.useState('');
    
@@ -209,8 +209,8 @@ export default function ListArticle() {
 
     //call Component FormArticle for update one article
     const updateFormArticle = (id: string) => {
-        Navigate(`/setArticle/${id}`);
-    }
+        navigate(`/setArticle/${id}`);
+    };
 
     return (
         <>
