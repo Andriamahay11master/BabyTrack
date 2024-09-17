@@ -7,7 +7,7 @@ import { SalesType } from '../../models/Sales'
 import './listArticle.scss'
 import ExportCSV from '../../components/csv/ExportCSV'
 import ExportExcel from '../../components/excel/ExportExcel'
-import { collection, getDocs, query, orderBy, updateDoc, where } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, updateDoc, where, deleteDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase'
 import { formatNumber } from '../../data/function'
 import Alert from '../../components/alert/Alert'
@@ -31,6 +31,7 @@ export default function ListArticle() {
     const inputFilterRefMonthArticle = React.createRef<HTMLSelectElement>();
     const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
     const [successSold, setSuccessSold] = useState(false);
+    const [successRemoveArticle, setSuccessRemoveArticle] = useState(false);
 
     //GetArticlesBYMonth&Year
     const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
@@ -122,7 +123,22 @@ export default function ListArticle() {
     }
 
     const deleteArticle = (id: string) => {
-        console.log(id);
+        try{
+            const q = query(collection(db, "article"), where("reference", "==", id));
+            getDocs(q).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    deleteDoc(doc.ref);
+                })
+            })   
+            setSuccessRemoveArticle(true);
+            getArticlesByMonthYear(Number(inputFilterMonthArticle), Number(inputFilterYearArticle), inputFilterStateArticle);
+            setTimeout(() => {
+                setSuccessRemoveArticle(false);
+            }, 1000);
+        }
+        catch (error){ 
+            console.error("Error adding document: ", error);
+        }
     }
 
     //function article sold
@@ -254,6 +270,7 @@ export default function ListArticle() {
                         </div>
                     </div>
                     <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
+                    <Alert icon="icon-checkmark" type="danger" message="Article supprimé" state={successRemoveArticle ? true : false}/>
                 </div>
              </>
         ) : (
