@@ -9,7 +9,12 @@ import { auth } from '../../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { Navigate } from 'react-router-dom'
 import Splashscreen from '../splashscreen/Splashscreen'
-export default function AddArticle() {
+
+interface AddArticleProps {
+    state: boolean
+    referenceArticle?: string
+}
+export default function AddArticle({state, referenceArticle} : AddArticleProps) {
     const [userUID, setUserUID] = React.useState('');
     const [userMail, setUserMail] = React.useState('');
 
@@ -37,7 +42,7 @@ export default function AddArticle() {
                         </div>
                         <div className="main-section page-form">
                             <div className="section-form">
-                                <FormArticle stateForm={true} uidUser={userUID}/>
+                                {referenceArticle ? <FormArticle stateForm={state} uidUser={userUID} referenceArticle={referenceArticle}/> : <FormArticle stateForm={state} uidUser={userUID}/>}
                             </div>
                         </div>
                     </div>

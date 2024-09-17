@@ -7,9 +7,10 @@ import Alert from '../alert/Alert';
 interface FormArticleProps {
     stateForm : boolean
     uidUser : string
+    referenceArticle? : string
 }
 
-export default function FormArticle({stateForm, uidUser} : FormArticleProps) {
+export default function FormArticle({stateForm, uidUser, referenceArticle} : FormArticleProps) {
 
     const [reference, setReference] = useState('');
     const [description, setDescription] = useState('');
