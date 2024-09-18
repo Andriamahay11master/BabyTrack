@@ -1,10 +1,11 @@
 import './formArticle.scss';
 import {taille} from '../../data/article';
-import { db } from '../../firebase';
+import { db, storage } from '../../firebase';
 import { collection, addDoc, Timestamp, where, getDocs, query, updateDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Alert from '../alert/Alert';
 import { useNavigate } from 'react-router-dom';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 interface FormArticleProps {
     stateForm : boolean
     uidUser : string
@@ -26,7 +27,20 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const addArticle = async () => {
-        if(date){
+        if(!date && !selectedImage) return;
+
+        try{
+            // Référence vers Firebase Storage
+            const storageRef = ref(storage, `images/${reference}_${Date.now()}`); // Nom unique pour chaque image
+
+            // Upload de l'image
+            const response = await fetch(selectedImage!); // Récupère l'image en tant que blob
+            const blob = await response.blob();
+            await uploadBytes(storageRef, blob);
+
+            // Obtenir l'URL de téléchargement de l'image
+            const imageUrl = await getDownloadURL(storageRef);
+
             await addDoc(collection(db, 'article'), {
                 reference: reference,
                 description: description,
@@ -38,7 +52,8 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                 dateV: date,
                 stock: 1,
                 etat: false,
-                uidUser: uidUser
+                uidUser: uidUser,
+                imageUrl : imageUrl
             })
             setSuccess(true);
             resetForm();
@@ -46,7 +61,9 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                 setSuccess(false);
             }, 1000);
         }
-        
+        catch(error){
+            console.log(error);
+        }
     }
 
     //Affiche les valeurs de l'article pour chaque champs
@@ -123,6 +140,8 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         setPrixV(0);
         setQuantite(1);
         setDate(null);
+        setSelectedImage(null);
+        
     }
 
     const onChangeReference = (e: React.ChangeEvent<HTMLInputElement>) => {
