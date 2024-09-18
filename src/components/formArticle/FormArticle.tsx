@@ -23,6 +23,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [date, setDate] = useState<Timestamp | null>(Timestamp.fromDate(new Date()));
     const [success, setSuccess] = useState(false);
     const [update, setUpdate] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const addArticle = async () => {
         if(date){
@@ -152,6 +153,13 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         }
     }
 
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files[0]) {
+          const img = event.target.files[0];
+          setSelectedImage(URL.createObjectURL(img)); // Preview the selected image
+        }
+      };
+
     useEffect(() => {
         if(referenceArticle){
             displayValueArticle(referenceArticle);
@@ -162,6 +170,16 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         <div className="form-block">
             <h3 className="title-h3">Nouveau Article</h3>
             <form action="" className='form-content'>
+                <div className="form-group">
+                    <label htmlFor="imageArticle">Charger ou prendre une photo</label>
+                    <input type="file" name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
+                </div>
+                {selectedImage && (
+                    <div className='form-group image-preview'>
+                        <span>Aperçu : </span>
+                        <img src={selectedImage} alt="Image selectionné" className="image-preview__image" />
+                    </div>
+                )}
                 <div className="form-group">
                     <label htmlFor="referenceArticle">Référence</label>
                     <input type="text" placeholder="Saisissez votre référence" id="referenceArticle" value={reference} onChange={onChangeReference}/>

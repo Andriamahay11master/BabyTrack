@@ -19,8 +19,14 @@
                 display: flex;
                 justify-content: flex-end;
             }
+            &.image-preview{
+                align-items: flex-start;
+                img{
+                    width: 100%;
+                }
+            }
         }
-        label{
+        span,label{
             font-size: 14px;
             display: inline-block;
             font-style: italic;
