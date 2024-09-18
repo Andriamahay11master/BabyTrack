@@ -1,0 +1,45 @@
+@import "../../assets/scss/common/variable";
+@import "../../assets/scss/common/mixins";
+
+
+.footerPage {
+    background: $dark-grey;
+    position: relative;
+    z-index: 2;
+    a {
+        color: $grey-c4;
+        text-decoration: none;
+        &:hover {
+            color: #FFF;
+        }
+    }
+    .footerCopyright {
+        padding: 18px 135px;
+        border-top: 1px solid rgba($grey-c4, 0.25);
+        background: $dark-grey;
+        margin: 0 6px;
+        @include max(1440px){
+            padding: 18px 50px;
+        }
+        @include max(768px){
+            padding: 15px 10px;
+            border-top: none;
+        }
+        .cntCopyright {
+            display: flex;
+            align-items: center;
+            @include max(635px) {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        p{
+            color: $grey-c4;
+            font-size: 12px;
+            font-weight: 300;
+        }
+        .copyRightLink{
+            text-decoration: underline;
+        }
+    }
+}
