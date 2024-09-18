@@ -26,6 +26,8 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [update, setUpdate] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [previousImageUrl, setPreviousImageUrl] = useState<string | null>(null);
+
 
     // État pour le chargement
     const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +37,6 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
 
         setIsLoading(true);
 
-    
         try{
             // Référence vers Firebase Storage
             const storageRef = ref(storage, `images/${reference}_${Date.now()}`); // Nom unique pour chaque image
@@ -48,7 +49,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             // Obtenir l'URL de téléchargement de l'image
             const imageUrl = await getDownloadURL(storageRef);
 
-            await addDoc(collection(db, 'article'), {
+            await addDoc(collection(db, 'article'), {   
                 reference: reference,
                 description: description,
                 taille: size,
@@ -89,6 +90,11 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                     setPrixV(doc.data().prixV);
                     setQuantite(doc.data().stock);
                     setDate(doc.data().dateA);
+                    
+                    // Récupérer l'ancienne image et l'enregistrer
+                    const imageUrl = doc.data().imageUrl;
+                    setSelectedImage(imageUrl);
+                    setPreviousImageUrl(imageUrl);
                 })
             })
         }
@@ -98,47 +104,59 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     }
 
     const updateArticle = async () => {
-        if (date) {
-            try {
-                const q = query(collection(db, "article"), where("reference", "==", referenceArticle));
-                const querySnapshot = await getDocs(q);
-    
-                // Parcourt les documents retournés et met à jour chacun
-                const updatePromises = querySnapshot.docs.map(async (doc) => {
-                    await updateDoc(doc.ref, {
-                        reference: reference,
-                        description: description,
-                        taille: size,
-                        prixA: prixA,
-                        prixV: prixV,
-                        benefice: prixV - prixA,
-                        dateA: date,
-                        dateV: date,
-                        stock: quantite,
-                        etat: false
-                    });
-                });
-    
-                // Attends que toutes les mises à jour soient effectuées
-                await Promise.all(updatePromises);
-    
-                // Si la mise à jour est réussie, mets à jour l'état et affiche l'alerte
-                setUpdate(true);
-                resetForm();  // Réinitialise le formulaire
-    
-                // Affiche l'alerte de succès avant la redirection
-                setTimeout(() => {
-                    setUpdate(false);
-                    navigate('/listArticle'); 
-                }, 1000);
-    
-            } catch (error) {
-                console.error("Erreur lors de la mise à jour de l'article : ", error);
-                // Vous pouvez ajouter une gestion d'erreur ici, comme afficher un message d'erreur à l'utilisateur
+        if(!date) return;
+        
+        setIsLoading(true);
+        
+        try {
+            let imageUrl = previousImageUrl;
+            // Si une nouvelle image est sélectionnée, on l'upload dans Firebase Storage
+            if (selectedImage && selectedImage !== previousImageUrl) {
+                const storageRef = ref(storage, `images/${reference}_${Date.now()}`);
+                const response = await fetch(selectedImage);
+                const blob = await response.blob();
+                await uploadBytes(storageRef, blob);
+
+                imageUrl = await getDownloadURL(storageRef);
             }
-        } else {
-            // Si la date n'est pas fournie, vous pouvez afficher une alerte ou un message ici
-            alert("La date est requise pour mettre à jour l'article.");
+            const q = query(collection(db, "article"), where("reference", "==", referenceArticle));
+            const querySnapshot = await getDocs(q);
+
+            // Parcourt les documents retournés et met à jour chacun
+            const updatePromises = querySnapshot.docs.map(async (doc) => {
+                await updateDoc(doc.ref, {
+                    reference: reference,
+                    description: description,
+                    taille: size,
+                    prixA: prixA,
+                    prixV: prixV,
+                    benefice: prixV - prixA,
+                    dateA: date,
+                    dateV: date,
+                    stock: quantite,
+                    etat: false,
+                    imageUrl : imageUrl
+                });
+            });
+
+            // Attends que toutes les mises à jour soient effectuées
+            await Promise.all(updatePromises);
+
+            // Si la mise à jour est réussie, mets à jour l'état et affiche l'alerte
+            setUpdate(true);
+            resetForm();  // Réinitialise le formulaire
+
+            // Affiche l'alerte de succès avant la redirection
+            setTimeout(() => {
+                setUpdate(false);
+                navigate('/listArticle'); 
+            }, 1000);
+
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour de l'article : ", error);
+            // Vous pouvez ajouter une gestion d'erreur ici, comme afficher un message d'erreur à l'utilisateur
+        } finally {
+            setIsLoading(false); // Arrêt le chargement une fois terminé
         }
     }
     
