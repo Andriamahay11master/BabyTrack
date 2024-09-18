@@ -27,9 +27,15 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+    // État pour le chargement
+    const [isLoading, setIsLoading] = useState(false);
+
     const addArticle = async () => {
         if(!date && !selectedImage) return;
 
+        setIsLoading(true);
+
+    
         try{
             // Référence vers Firebase Storage
             const storageRef = ref(storage, `images/${reference}_${Date.now()}`); // Nom unique pour chaque image
@@ -64,6 +70,9 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         }
         catch(error){
             console.log(error);
+        }
+        finally {
+            setIsLoading(false); // Arrête le chargement une fois terminé
         }
     }
 
@@ -194,7 +203,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     return (
         <div className="form-block">
             <h3 className="title-h3">Nouveau Article</h3>
-            <form action="" className='form-content'>
+            <form action="" className={isLoading ? 'form-content loading' : 'form-content'}>
                 <div className="form-group">
                     <label htmlFor="imageArticle">Charger ou prendre une photo</label>
                     <input type="file" ref={fileInputRef} name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
@@ -234,7 +243,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                     <input type="text" placeholder="Saisissez votre prix de vente" id="prixV" pattern='\d*' value={prixV} onChange={onChangePrixV}/>
                 </div>
                 <div className="form-group form-submit">
-                    <button type="button" className='btn btn-primary' onClick={stateForm ? addArticle : updateArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
+                    <button type="button" className="btn btn-primary" onClick={stateForm ? addArticle : updateArticle}>{stateForm ? "Enregistrer" : "Modifier"}</button>
                 </div>
             </form>
             <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
