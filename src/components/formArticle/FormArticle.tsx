@@ -2,7 +2,7 @@ import './formArticle.scss';
 import {taille} from '../../data/article';
 import { db, storage } from '../../firebase';
 import { collection, addDoc, Timestamp, where, getDocs, query, updateDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Alert from '../alert/Alert';
 import { useNavigate } from 'react-router-dom';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -25,6 +25,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [success, setSuccess] = useState(false);
     const [update, setUpdate] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const addArticle = async () => {
         if(!date && !selectedImage) return;
@@ -141,7 +142,12 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         setQuantite(1);
         setDate(null);
         setSelectedImage(null);
-        
+
+        // Réinitialise l'input de fichier en vidant sa valeur
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+
     }
 
     const onChangeReference = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,7 +197,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             <form action="" className='form-content'>
                 <div className="form-group">
                     <label htmlFor="imageArticle">Charger ou prendre une photo</label>
-                    <input type="file" name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
+                    <input type="file" ref={fileInputRef} name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
                 </div>
                 {selectedImage && (
                     <div className='form-group image-preview'>
