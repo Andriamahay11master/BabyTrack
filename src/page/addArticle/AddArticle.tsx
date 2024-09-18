@@ -9,6 +9,7 @@ import { auth } from '../../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { Navigate, useParams } from 'react-router-dom'
 import Splashscreen from '../splashscreen/Splashscreen'
+import Footer from '../../components/footer/Footer'
 
 interface AddArticleProps {
     state: boolean
@@ -47,6 +48,7 @@ export default function AddArticle({state} : AddArticleProps) {
                         </div>
                     </div>
                 </div>
+                <Footer copyright="Simply Sweet"/>
             </>
         ) : (
             <Splashscreen/>

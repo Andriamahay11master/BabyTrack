@@ -16,6 +16,7 @@ import { months } from '../../data/article'
 import { onAuthStateChanged } from 'firebase/auth'
 import Splashscreen from '../splashscreen/Splashscreen'
 import { Navigate } from 'react-router-dom'
+import Footer from '../../components/footer/Footer'
 export default function Dashboard() {
     const [salesSold, setSalesSold] = useState(Array<SalesType>);
     const [salesNotSold, setSalesNotSold] = useState(Array<SalesType>);
@@ -185,36 +186,37 @@ export default function Dashboard() {
         <>
         {(userMail !== '') ? (
             <>
-            <Header linkMenu={headerNav} userMail={userMail}/>
-            <div className='main-page'>
-                <div className="container">
-                    <div className="main-page-top">
-                        <Breadcrumb items={breadcrumbDashboard}/>
-                        <div className="filter-main">
-                            <span>Choisissez le mois et l'année :</span>
-                            <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
-                                {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
-                            </select> 
-                            <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
-                                {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
-                            </select> 
+                <Header linkMenu={headerNav} userMail={userMail}/>
+                <div className='main-page'>
+                    <div className="container">
+                        <div className="main-page-top">
+                            <Breadcrumb items={breadcrumbDashboard}/>
+                            <div className="filter-main">
+                                <span>Choisissez le mois et l'année :</span>
+                                <select name="filter-month" id="filter-month" ref={inputFilterRefMonthArticle} onChange={handleFilterMonthArticle} value={inputFilterMonthArticle}>
+                                    {months.map((month:string, index:number) => (<option key={index} value={index + 1}>{month}</option>))}
+                                </select> 
+                                <select name="filter-year" id="filter-year" ref={inputFilterRefYearArticle} onChange={handleFilterYearArticle} value={inputFilterYearArticle}>
+                                    {Array.from(Array(10).keys()).map((index) => <option key={index} value={2024 + index}>{2024 + index}</option>)}
+                                </select> 
+                            </div>
                         </div>
-                    </div>
-                    <div className="main-section listKpi">
-                            {updateKpi.map((item, index) => <Kpi key={index} icon={item.icon} title={item.title} value={item.value} currency={item.currency} />)}
-                    </div>
-                    <div className='main-section detailKpi'>
-                        <div className="detailKpi-item">
-                            <h2 className="title-h2 detailKpi-title">Articles vendus</h2>
-                            <Sales dataList={salesSold}/>
+                        <div className="main-section listKpi">
+                                {updateKpi.map((item, index) => <Kpi key={index} icon={item.icon} title={item.title} value={item.value} currency={item.currency} />)}
                         </div>
-                        <div className="detailKpi-item">
-                            <h2 className="title-h2 detailKpi-title">Articles non vendus</h2>
-                            <Sales dataList={salesNotSold}/>
+                        <div className='main-section detailKpi'>
+                            <div className="detailKpi-item">
+                                <h2 className="title-h2 detailKpi-title">Articles vendus</h2>
+                                <Sales dataList={salesSold}/>
+                            </div>
+                            <div className="detailKpi-item">
+                                <h2 className="title-h2 detailKpi-title">Articles non vendus</h2>
+                                <Sales dataList={salesNotSold}/>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <Footer copyright="Simply Sweet"/>
             </>
         ) : (
             <Splashscreen/>

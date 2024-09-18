@@ -16,6 +16,7 @@ import {yearNow, monthNow} from '../../data/article'
 import { onAuthStateChanged } from 'firebase/auth'
 import { Navigate, useNavigate } from 'react-router-dom';
 import Splashscreen from '../splashscreen/Splashscreen'
+import Footer from '../../components/footer/Footer'
 
 export default function ListArticle() {
 
@@ -273,6 +274,7 @@ export default function ListArticle() {
                     <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
                     <Alert icon="icon-checkmark" type="danger" message="Article supprimé" state={successRemoveArticle ? true : false}/>
                 </div>
+                <Footer copyright="Simply Sweet"/>
              </>
         ) : (
             <Splashscreen/>

@@ -1,7 +1,7 @@
 .main-page{
     padding-top: 75px;
     background: $default-bg;
-    min-height: 100vh;
+    min-height: calc(100vh - 54px);
     @include max(1200px){
         padding-top: 85px;
     }
