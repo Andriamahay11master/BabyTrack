@@ -206,6 +206,7 @@ export default function ListArticle() {
 
     const salesExportExcel = sales.map(sale => ({
         ...sale,
+        imageUrl: sale.imageUrl ? `${sale.imageUrl}` : "Pas d'image",
         etat: sale.etat ? 'Vendu' : 'Non Vendu'
     }));
 
