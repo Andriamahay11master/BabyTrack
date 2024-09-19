@@ -70,9 +70,14 @@
                 padding: 10px;
                 font-size: 13px;
                 color: $grey-4A;
+                vertical-align: middle;
                 @include max(575px){
                     white-space: nowrap;
                 }
+            }
+            img{
+                width: 50px;
+                height: auto;
             }
         }
         .action-box{

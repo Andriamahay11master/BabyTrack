@@ -50,6 +50,7 @@ export default function Dashboard() {
                 const dateV = new Date(doc.data().dateV.seconds * 1000);
                 return {
                     idsales: doc.data().reference,
+                    imageUrl: doc.data().imageUrl,
                     description: doc.data().description,
                     taille: doc.data().taille,
                     prixAchat: doc.data().prixA,
@@ -87,6 +88,7 @@ export default function Dashboard() {
                 const dateV = new Date(doc.data().dateV.seconds * 1000);
                 return {
                     idsales: doc.data().reference,
+                    imageUrl: doc.data().imageUrl,
                     description: doc.data().description,
                     taille: doc.data().taille,
                     prixAchat: doc.data().prixA,

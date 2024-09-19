@@ -88,6 +88,7 @@ export default function ListArticle() {
     
                 return {
                     idsales: doc.data().reference,
+                    imageUrl : doc.data().imageUrl,
                     description: doc.data().description,
                     taille: doc.data().taille,
                     prixAchat: doc.data().prixA,
@@ -244,6 +245,7 @@ export default function ListArticle() {
                                         <thead>
                                             <tr>
                                                 <th>Réference</th>
+                                                <th>Image</th>
                                                 <th>Description</th>
                                                 <th>Taille</th>
                                                 <th>Prix d'achat</th>
@@ -257,6 +259,7 @@ export default function ListArticle() {
                                             {sales.map((list, index) => (
                                                 <tr key={index}>
                                                     <td>{list.idsales}</td>
+                                                    <td><img src={list.imageUrl}/></td>
                                                     <td>{list.description}</td>
                                                     <td>{list.taille}</td>
                                                     <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + ' MGA' : 0}</td>

@@ -1,5 +1,6 @@
 export type SalesType = {
     idsales: string,
+    imageUrl: string,
     description: string,
     taille: string,
     prixAchat: number,
