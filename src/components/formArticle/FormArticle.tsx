@@ -273,7 +273,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             </form>
             <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
             <Alert icon="icon-checkmark" type="success" message="Modification article reussi" state={update ? true : false}/>
-            {openCamera && <CapturePhoto/>}
+            {openCamera && <CapturePhoto />}
         </div>
     )
 }
