@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import Alert from '../alert/Alert';
 import { useNavigate } from 'react-router-dom';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import CapturePhoto from '../capture/CapturePhoto';
 interface FormArticleProps {
     stateForm : boolean
     uidUser : string
@@ -232,6 +233,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                         <img src={selectedImage} alt="Image selectionné" className="image-preview__image" />
                     </div>
                 )}
+                <CapturePhoto/>
                 <div className="form-group">
                     <label htmlFor="referenceArticle">Référence</label>
                     <input type="text" placeholder="Saisissez votre référence" id="referenceArticle" value={reference} onChange={onChangeReference}/>
