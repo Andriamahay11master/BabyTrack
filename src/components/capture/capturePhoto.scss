@@ -1,0 +1,35 @@
+@import '../../assets/scss/common/variable';
+@import '../../assets/scss/common/mixins';
+
+.capturePhoto {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($black, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    .captureContent {
+        width: 30vw;
+    }
+    video{
+        width: 100%;
+    }
+    img{
+        border-radius: 10px;
+    }
+    .title-h3{
+        color: #FFF;
+    }
+    .capture-col, .capturePhotoAction{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        .btn{
+            margin-top: 10px;
+        }
+    }
+}
