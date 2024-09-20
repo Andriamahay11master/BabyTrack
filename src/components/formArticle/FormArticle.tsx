@@ -28,7 +28,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [previousImageUrl, setPreviousImageUrl] = useState<string | null>(null);
-
+    const [openCamera, setOpenCamera] = useState(false);
 
     // État pour le chargement
     const [isLoading, setIsLoading] = useState(false);
@@ -213,6 +213,11 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         }
       };
 
+      const takePhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setOpenCamera(true)
+      }
+
     useEffect(() => {
         if(referenceArticle){
             displayValueArticle(referenceArticle);
@@ -223,9 +228,10 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         <div className="form-block">
             <h3 className="title-h3">Nouveau Article</h3>
             <form action="" className={isLoading ? 'form-content loading' : 'form-content'}>
-                <div className="form-group">
+                <div className="form-group form-file">
                     <label htmlFor="imageArticle">Charger ou prendre une photo</label>
                     <input type="file" ref={fileInputRef} name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
+                    <button className='btn btn-primary' onClick={takePhoto}>Prendre une photo</button>
                 </div>
                 {selectedImage && (
                     <div className='form-group image-preview'>
@@ -233,7 +239,6 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
                         <img src={selectedImage} alt="Image selectionné" className="image-preview__image" />
                     </div>
                 )}
-                <CapturePhoto/>
                 <div className="form-group">
                     <label htmlFor="referenceArticle">Référence</label>
                     <input type="text" placeholder="Saisissez votre référence" id="referenceArticle" value={reference} onChange={onChangeReference}/>
@@ -268,6 +273,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             </form>
             <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
             <Alert icon="icon-checkmark" type="success" message="Modification article reussi" state={update ? true : false}/>
+            {openCamera && <CapturePhoto/>}
         </div>
     )
 }
