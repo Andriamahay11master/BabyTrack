@@ -218,6 +218,15 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
         setOpenCamera(true)
       }
 
+      const handlePhotoCapture = (photo: string | null) => {
+        setSelectedImage(photo); // Enregistrer la photo capturée
+        setOpenCamera(false); // Fermer la caméra après capture
+    };
+
+    const closeCamera = () => {
+        setOpenCamera(false); // Fermer la caméra manuellement
+    };
+
     useEffect(() => {
         if(referenceArticle){
             displayValueArticle(referenceArticle);
@@ -273,7 +282,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             </form>
             <Alert icon="icon-checkmark" type="success" message="Enregistrement article reussi" state={success ? true : false}/>
             <Alert icon="icon-checkmark" type="success" message="Modification article reussi" state={update ? true : false}/>
-            {openCamera && <CapturePhoto />}
+            {openCamera && <CapturePhoto onClose={closeCamera} onCapture={handlePhotoCapture}/>}
         </div>
     )
 }

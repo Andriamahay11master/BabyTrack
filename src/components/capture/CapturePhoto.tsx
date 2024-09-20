@@ -2,9 +2,13 @@ import { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import './capturePhoto.scss';
 
-function CapturePhoto() {
+interface CapturePhotoProps {
+    onClose: () => void; // Ajoute une prop pour fermer la caméra
+    onCapture: (photo: string | null) => void; // Ajoute une prop pour renvoyer la photo capturée
+}
 
-    const [isPopinOpen, setIsPopinOpen] = useState(false); // New state for popin visibility
+function CapturePhoto({ onClose, onCapture }: CapturePhotoProps) {
+
     const webcamRef = useRef<Webcam | null>(null);
   const [capturedPhoto, setCapturedPhoto] = useState<string |null>(null);
 
@@ -12,17 +16,12 @@ function CapturePhoto() {
     if (!webcamRef.current) return;
     const imageSrc = webcamRef.current.getScreenshot(); // Capture photo
     setCapturedPhoto(imageSrc);
+    onCapture(imageSrc);
   };
-
-  const closePopin = () => {
-    setIsPopinOpen(false);
-  };
-
-  if(!isPopinOpen) return null;
 
   return (
     <div className='capturePhoto'>
-        <button className='btn btn-icon' onClick={closePopin}><i className='icon-close'></i></button>
+        <button className='btn btn-icon' onClick={onClose}><i className='icon-close'></i></button>
         <div className="captureContent">
             <div className="capturePhotoTop">
                 {!capturedPhoto ? (
@@ -38,7 +37,7 @@ function CapturePhoto() {
                     <div className='capture-col'>
                         <h3 className='title-h3'>Aperçu de votre photo:</h3>
                         <img className="image-capture" src={capturedPhoto} alt="photo capturé" />
-                        <button className="btn btn-primary" onClick={() => setCapturedPhoto(null)}>Choisir cette photo</button>
+                        <button className="btn btn-primary" onClick={onClose}>Choisir cette photo</button>
                     </div>
                     )}
             </div>
