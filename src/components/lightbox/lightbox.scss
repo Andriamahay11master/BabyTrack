@@ -1,3 +1,31 @@
 @import '../../assets/scss/common/variable';
 @import '../../assets/scss/common/mixins';
 
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba($black, 0.5);
+    width: 100vw;
+    height: 100vh;
+    z-index: 103;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .btn-icon{
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        font-size: 20px;
+        color: #FFF;
+    }
+    .lightbox-image{
+        width: 80%;
+        height: 80%;
+        img{
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+    }
+}
