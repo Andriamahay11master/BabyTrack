@@ -1,5 +1,5 @@
 
-import './Lightbox.scss';
+import './lightbox.scss';
 
 interface LightboxProps {
     state: boolean,
