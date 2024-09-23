@@ -239,7 +239,7 @@ export default function FormArticle({stateForm, uidUser, referenceArticle} : For
             <form action="" className={isLoading ? 'form-content loading' : 'form-content'}>
                 <div className="form-group form-file">
                     <label htmlFor="imageArticle">Charger ou prendre une photo</label>
-                    <input type="file" ref={fileInputRef} name="imageArticle" id="imageArticle" accept="image/*"capture="environment" onChange={handleImageChange}/>
+                    <input type="file" ref={fileInputRef} name="imageArticle" id="imageArticle" accept="image/*" onChange={handleImageChange}/>
                     <button className='btn btn-primary' onClick={takePhoto}>Prendre une photo</button>
                 </div>
                 {selectedImage && (
