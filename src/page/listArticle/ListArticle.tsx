@@ -287,7 +287,7 @@ export default function ListArticle() {
                     </div>
                     <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
                     <Alert icon="icon-checkmark" type="danger" message="Article supprimé" state={successRemoveArticle ? true : false}/>
-                    {openLight && <Lightbox imageSrc={imgSrc} />}
+                    <Lightbox state={openLight} imageSrc={imgSrc} onClose={() => setOpenLight(false)}/>
                 </div>
                 <Footer copyright="Simply Sweet"/>
              </>
