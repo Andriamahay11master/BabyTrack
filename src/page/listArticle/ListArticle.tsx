@@ -17,6 +17,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { Navigate, useNavigate } from 'react-router-dom';
 import Splashscreen from '../splashscreen/Splashscreen'
 import Footer from '../../components/footer/Footer'
+import Lightbox from '../../components/lightbox/Lightbox'
 
 export default function ListArticle() {
 
@@ -33,7 +34,8 @@ export default function ListArticle() {
     const [inputFilterMonthArticle, setInputFilterMonthArticle] = React.useState(monthNow.toString());
     const [successSold, setSuccessSold] = useState(false);
     const [successRemoveArticle, setSuccessRemoveArticle] = useState(false);
-
+    const [openLight, setOpenLight] = useState(false);
+    const [imgSrc, setImgSrc] = useState('');
     //GetArticlesBYMonth&Year
     const getArticlesByMonthYear = async (month: number, year: number, state: string) => {
         try {
@@ -210,6 +212,12 @@ export default function ListArticle() {
         etat: sale.etat ? 'Vendu' : 'Non Vendu'
     }));
 
+    //method openLightBox
+    const openLightBox = (imgSrc: string) => {
+        setImgSrc(imgSrc);
+        setOpenLight(true);
+    }
+
     //call Component FormArticle for update one article
     const updateFormArticle = (id: string) => {
         navigate(`/setArticle/${id}`);
@@ -260,7 +268,9 @@ export default function ListArticle() {
                                             {sales.map((list, index) => (
                                                 <tr key={index}>
                                                     <td>{list.idsales}</td>
-                                                    <td><img src={list.imageUrl}/></td>
+                                                    <td>
+                                                        <img src={list.imageUrl} onClick={() => openLightBox(list.imageUrl)}/>
+                                                    </td>
                                                     <td>{list.description}</td>
                                                     <td>{list.taille}</td>
                                                     <td>{list.prixAchat ? formatNumber(list.prixAchat.toString()) + ' MGA' : 0}</td>
@@ -277,6 +287,7 @@ export default function ListArticle() {
                     </div>
                     <Alert icon="icon-checkmark" type="success" message="Article vendu" state={successSold ? true : false}/>
                     <Alert icon="icon-checkmark" type="danger" message="Article supprimé" state={successRemoveArticle ? true : false}/>
+                    {openLight && <Lightbox imageSrc={imgSrc} />}
                 </div>
                 <Footer copyright="Simply Sweet"/>
              </>
